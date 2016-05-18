@@ -6,18 +6,15 @@ service up & running quickly with some things we care about in a production syst
 
 It aims to provide:
 
+* A HTTP stack, using [Finch](https://github.com/finagle/finch);
 * Authentication support;
-* JSON encoding & decoding;
+* JSON encoding & decoding, using [Circe](https://github.com/travisbrown/circe);
 * Clients for talking to downstream services;
 * Centralised logging;
-* Monitoring & metrics support; and
-* Reasonable error handling.
-
-It uses the following tools/libraries:
-
-* JSON - [Circe](https://github.com/travisbrown/circe)
-* Testing - [specs2](https://etorreborre.github.io/specs2/) & [ScalaCheck](https://www.scalacheck.org).
-* Packaging - [SBT Native Packager](https://github.com/sbt/sbt-native-packager)
+* Monitoring & metrics support;
+* Reasonable error handling;
+* Testing using [specs2](https://etorreborre.github.io/specs2/) & [ScalaCheck](https://www.scalacheck.org);
+* Packaging using [SBT Native Packager](https://github.com/sbt/sbt-native-packager).
 
 # Further Reading
 
