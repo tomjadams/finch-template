@@ -1,15 +1,17 @@
 # Finch HTTP Service Template
 
-This is a template for a simple, stateless HTTP server built on top of Finch. It aims to provide a simple, consistent,
-beginner- to intermediate-level stack, aimed at getting a small HTTP-based service up & running quickly.
+This is a template for a simple, stateless HTTP API built on top of [Finch](https://github.com/finagle/finch). It
+aims to provide a simple, consistent, beginner- to intermediate-level stack, aimed at getting a small HTTP-based
+service up & running quickly with some things we care about in a production system.
 
 It aims to provide:
 
 * Authentication support;
 * JSON encoding & decoding;
-* Comms to downstream services;
+* Clients for talking to downstream services;
+* Centralised logging;
 * Monitoring & metrics support; and
-* Standardised error handling.
+* Reasonable error handling.
 
 It uses the following tools/libraries:
 
