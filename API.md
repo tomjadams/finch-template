@@ -67,7 +67,7 @@ And a missing `context` field in the request body:
 
 ### Production
 
-* `http://liege-api.herokuapp.com`
+* `http://liege-api.com`
 
 Substitute the domain `liege-api` in the example below with this.
 
