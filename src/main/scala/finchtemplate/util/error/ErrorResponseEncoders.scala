@@ -8,16 +8,16 @@ import io.finch.EncodeResponse
 
 trait ErrorResponseEncoders {
   implicit val exceptionEncoder = Encoder.instance[Exception] { e =>
-    val base = List(
+    val base = Map(
       "message" -> e.getMessage,
       "type" -> e.getClass.getSimpleName
     )
-    val withCause = base.++(Option(e.getCause).map(cause => List("cause" -> cause.getMessage)).getOrElse(Nil))
+    val withCause = base.++(Option(e.getCause).map(cause => Map("cause" -> cause.getMessage)).getOrElse(Map()))
     withCause.asJson
   }
 
   implicit def exceptionResponseEncoder: EncodeResponse[Exception] =
-    EncodeResponse(HttpOps.jsonMimeType)(e => Utf8(("error" -> exceptionEncoder.apply(e)).asJson.noSpaces))
+    EncodeResponse(HttpOps.jsonMimeType)(e => Utf8(Map("error" -> exceptionEncoder.apply(e)).asJson.noSpaces))
 }
 
 object ErrorResponseEncoders extends ErrorResponseEncoders
