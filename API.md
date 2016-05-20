@@ -1,16 +1,16 @@
-# Liege API
+# Finch Template API
 
 # Overview
 
 ## Conventions
 
-This is the Liege API. Conventions:
+This is the FInch Template API. Conventions:
 
 * All calls run over TLS.
 * The API accepts & returns JSON, all `POST` & `PUT` payloads are specified in JSON (i.e. not `application/x-www-form-urlencoded`).
 * All calls accept (for `PUT` & `POST`) & return JSON objects, e.g. `{"data":{"foo":"bar"}}`
 * All parameters are specified in a `data` object at the root level.
-* All responses return JSON objects, which will one of (but not both):
+* All responses return JSON objects, which will *one of* (but not both):
   * `error` - if an error ocurred.
   * `data` - if the response was a success.
 * Additional parameters may be specified in the query string where documented.
@@ -23,19 +23,30 @@ This is the Liege API. Conventions:
 
 ## Required Parameters
 
+All requests require authentication using [Hawk](https://github.com/hueniverse/hawk), which is a HMAC style
+authentication method. Provide an `Authorization` header containing the authorisation details.
+
+```
+GET /resource/1?b=1&a=2 HTTP/1.1
+Host: example.com:8000
+Authorization: Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE="
+```
+
+If you don't include correct authentication you will get a `401` with a `WWW-Authenticate: Hawk` header:
+
+```
+$ curl -i http://liege-api/v1/users/sign-out -d '{ "data": {} }'
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json;charset=utf-8
+Content-Length: 143
+
+{"error":{"message":"Missing auth token; include header 'X-Liege-Auth-Token' or Cookie 'liege_session_id'","type":"AuthenticationFailedError"}}
+```
+
+
 All `POST` API operations expect the following params in their JSON payload (at the root level):
 
-* `data`
-  * Call specific data, as per below. Note that only the operation specific information is documented below, the contextual information is assumed.
-
-Additionally, you must provide your authentication token with all requests (except sign in) as either a `Cookie` or a `X-Liege-Auth-Token` HTTP header. If you don't include a token you will get a `401`:
-
-    $ curl -i http://liege-api/v1/users/sign-out -d '{ "context": {"app_id": "com.liege.ios", "device_id": "dddd0354bd884f929b66e1b2daf4f0e89184", "build_version": "1.0.0"}, "data": {} }'
-    HTTP/1.1 401 Unauthorized
-    Content-Type: application/json;charset=utf-8
-    Content-Length: 143
-
-    {"error":{"message":"Missing auth token; include header 'X-Liege-Auth-Token' or Cookie 'liege_session_id'","type":"AuthenticationFailedError"}}
+* `data`: Call specific data, as per below.
 
 ## Errors
 
@@ -240,14 +251,3 @@ Details for a given ride.
     Content-Length: 587
 
     {"data":{"ride":{"name":"Tour de Eltham","start_time":"2015-12-21T09:46:11.623Z","location":{"name":"Peak Heidelberg","address":"124 Burgundy St Heidelberg","latitude":-37.755852,"longitude":145.064769},"backend_type":"facebook","details":"Wednesday morning Peak Cycles Tour de Eltham","backend_id":"001","attendance":"in","picture_url":"http://theclimbingcyclist.com/wp-content/uploads/2010/07/Eltham-loop-ride-11.07.10-006.jpg","group":{"name":"Peak Cycles","backend_type":"facebook","backend_id":"101","backend_url":"https://www.facebook.com/groups/816037948419373/"},"distance":60}}}
-
-## **TODO FINISH THE BELOW**
-
-## Ride Attendance Summary
-
-Counts of ins, outs, user details of such.
-
-* in_count: integer
-* out_count: integer
-* maybe_count: integer
-
