@@ -24,9 +24,7 @@ final class HelloResponseEncodersSpec extends Specification with ScalaCheck with
 
   val responseProp = new Properties("Hello response encoding") {
     property("encode") = forAll { (h: Hello) =>
-      log.infoS(s"h.name: '${toResponseString(h)}'")
-      toResponseString(h) == s"""{"data":{"hello":{"name":""}}}"""
-      "" == ""
+      toResponseString(h) == s"""{"data":{"hello":{"name":"${h.name}"}}}"""
     }
   }
 

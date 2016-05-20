@@ -3,6 +3,7 @@ package finchtemplate.util.error
 import finchtemplate.spec.NonDatabaseTestHelper
 import org.specs2.mutable.Specification
 
+// TODO TJA Rewrite this as properties
 final class ErrorResponseEncodersSpec extends Specification with NonDatabaseTestHelper {
   "Encode failure response" >> {
     "encodes failures into an error object" >> {
