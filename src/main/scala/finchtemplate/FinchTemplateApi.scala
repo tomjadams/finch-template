@@ -10,7 +10,6 @@ import finchtemplate.util.log.filter.RequestLoggingFilter
 object FinchTemplateApi extends ResponseEncoders {
   private def api = helloApi()
 
-  // TODO Add in service name, tracer, etc. here. using the service builder. See ToService for an implementation.
   def apiService: Service[Request, Response] = {
     val service = api.handle(errorHandler).toService
     RequestLoggingFilter.andThen(service)

@@ -30,6 +30,7 @@ Here's some further reading on how this hangs together, and how to do more/exten
 # TODO
 
 * Authentication
+  * Server-Authorization header on responses.
 * Metrics - http://rodrigolazoti.com.br/2015/01/08/send-finagle-stats-to-codahale-metrics-library
 * Client calls to Google search
 * Syslog logging
