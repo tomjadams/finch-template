@@ -7,12 +7,13 @@ service up & running quickly with some things we care about in a production syst
 It aims to provide:
 
 * A HTTP stack, using [Finch](https://github.com/finagle/finch);
-* Authentication support using ;
+* Authentication support using [Hawk](https://github.com/hueniverse/hawk), a HMAC like protocol;
 * JSON encoding & decoding, using [Circe](https://github.com/travisbrown/circe);
 * Clients for talking to downstream services;
-* Centralised logging;
-* Monitoring & metrics support;
-* Reasonable error handling;
+* Centralised logging using syslog;
+* Monitoring & [metrics](https://twitter.github.io/finagle/guide/Metrics.html) support using ...;
+* Consistent error handling;
+* Tracing with [Zipkin](https://github.com/openzipkin/zipkin);
 * Testing using [specs2](https://etorreborre.github.io/specs2/) & [ScalaCheck](https://www.scalacheck.org);
 * Packaging using [SBT Native Packager](https://github.com/sbt/sbt-native-packager).
 
@@ -25,6 +26,14 @@ Here's some further reading on how this hangs together, and how to do more/exten
 * [Finch 101](http://vkostyukov.ru/slides/finch-101/)
 * [Getting started with Finagle](http://andrew-jones.com/blog/getting-started-with-finagle/)
 * [An introduction to Finagle](http://twitter.github.io/scala_school/finagle.html)
+
+# TODO
+
+* Authentication
+* Metrics - http://rodrigolazoti.com.br/2015/01/08/send-finagle-stats-to-codahale-metrics-library
+* Client calls to Google search
+* Syslog logging
+* Zipkin
 
 # Customising
 
@@ -66,7 +75,7 @@ $ ./sbt run
 You can also use [Revolver](https://github.com/spray/sbt-revolver) for restarts when code changes:
 
 ```
-$ sbt ~re-start
+$ ./sbt ~re-start
 ```
 
 # Testing

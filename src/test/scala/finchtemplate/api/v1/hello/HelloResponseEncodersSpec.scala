@@ -12,7 +12,7 @@ final class HelloResponseEncodersSpec extends Specification with ScalaCheck with
 
   val encodeProp = new Properties("Hello encoding") {
     property("encode") = forAll { (h: Hello) =>
-      h.asJson.noSpaces == s"""{"hello":{"name":"${h.name}"}}"""
+      h.asJson.noSpaces must beEqualTo(s"""{"hello":{"name":"${h.name}"}}""")
     }
   }
 
@@ -20,7 +20,7 @@ final class HelloResponseEncodersSpec extends Specification with ScalaCheck with
 
   val responseProp = new Properties("Hello response encoding") {
     property("encode") = forAll { (h: Hello) =>
-      toResponseString(h) == s"""{"data":{"hello":{"name":"${h.name}"}}}"""
+      toResponseString(h) must beEqualTo(s"""{"data":{"hello":{"name":"${h.name}"}}}""")
     }
   }
 

@@ -11,7 +11,7 @@ final class TimeOpsSpec extends Specification with ScalaCheck with SpecHelper {
   val milliConversionProps = new Properties("Milliseconds to String conversions") {
     property("roundtrip parsing using millis") = forAll { (millis: Long) =>
       val roundtrip = TimeOps.parseAsTime(TimeOps.toIso8601(millis))
-      roundtrip.contains(DateTime.parse(TimeOps.toIso8601(millis), TimeOps.iso8601Parser))
+      roundtrip must beSome(DateTime.parse(TimeOps.toIso8601(millis), TimeOps.iso8601Parser))
     }
   }
 
@@ -20,7 +20,7 @@ final class TimeOpsSpec extends Specification with ScalaCheck with SpecHelper {
   val dateTimeConversionProps = new Properties("DateTime to String conversions") {
     property("roundtrip parsing using datetime") = forAll { (d: DateTime) =>
       val roundtrip = TimeOps.parseAsTime(TimeOps.toIso8601(d))
-      roundtrip.contains(DateTime.parse(TimeOps.toIso8601(d), TimeOps.iso8601Parser))
+      roundtrip must beSome(DateTime.parse(TimeOps.toIso8601(d), TimeOps.iso8601Parser))
     }
   }
 

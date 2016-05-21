@@ -12,10 +12,10 @@ final class ErrorResponseEncodersSpec extends Specification with ScalaCheck with
 
   val encodeProp = new Properties("Hello encoding") {
     property("without exception cause") = forAll(genExceptionNoCause) { (e: java.lang.Exception) =>
-      e.asJson.noSpaces == s"""{"message":"${e.getMessage}","type":"Exception"}"""
+      e.asJson.noSpaces must beEqualTo(s"""{"message":"${e.getMessage}","type":"Exception"}""")
     }
     property("with exception cause") = forAll(genExceptionCause) { (e: java.lang.Exception) =>
-      e.asJson.noSpaces == s"""{"message":"${e.getMessage}","type":"Exception","cause":"${e.getCause.getMessage}"}"""
+      e.asJson.noSpaces must beEqualTo(s"""{"message":"${e.getMessage}","type":"Exception","cause":"${e.getCause.getMessage}"}""")
     }
   }
 
@@ -23,7 +23,7 @@ final class ErrorResponseEncodersSpec extends Specification with ScalaCheck with
 
   val responseProp = new Properties("Exception response encoding") {
     property("encode") = forAll(genException) { (e: java.lang.Exception) =>
-      toResponseString(e) == s"""{"error":${e.asJson.noSpaces}}"""
+      toResponseString(e) must beEqualTo(s"""{"error":${e.asJson.noSpaces}}""")
     }
   }
 
