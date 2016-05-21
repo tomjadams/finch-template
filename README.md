@@ -50,7 +50,10 @@ There is simple [API documentation](API.md).
 
 ## Development Setup
 
-1. Install [Java 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) from Oracle. You will need a JDK, as of the time of writing this is "Java SE Development Kit 8u92".
+1. Install [Java 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) from Oracle.
+   You will need a JDK (not a JRE), as of the time of writing this is "Java SE Development Kit 8u92". There is also
+   [documentation](http://www.oracle.com/technetwork/java/javase/documentation/jdk8-doc-downloads-2133158.html)
+   available (handy for linking into your IDE).
 
 1. Run [sbt](http://www.scala-sbt.org/release/docs/Getting-Started/Setup.html)::
 
