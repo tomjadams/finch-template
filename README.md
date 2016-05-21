@@ -7,7 +7,7 @@ service up & running quickly with some things we care about in a production syst
 It aims to provide:
 
 * A HTTP stack, using [Finch](https://github.com/finagle/finch);
-* Authentication support using [Hawk](https://github.com/hueniverse/hawk), a HMAC like protocol;
+* Authentication support using [Hawk](https://github.com/hueniverse/hawk), a HMAC-style protocol;
 * JSON encoding & decoding, using [Circe](https://github.com/travisbrown/circe);
 * Clients for talking to downstream services;
 * Centralised logging using syslog;
@@ -108,7 +108,7 @@ TODO
 
 # Uninstall
 
-You can uninstall everything you installed for this workshop by:
+You can uninstall everything you installed for this project by:
 
 ```
 $ rm -rf ~/.sbt
