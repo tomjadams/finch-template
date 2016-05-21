@@ -7,11 +7,12 @@ scalaVersion := "2.11.8"
 libraryDependencies ++= Seq(
   "com.github.finagle" %% "finch-core" % "0.11.0-SNAPSHOT" changing(),
   "com.github.finagle" %% "finch-circe" % "0.11.0-SNAPSHOT" changing(),
+  "com.twitter" %% "twitter-server" % "1.20.0",
   "com.netaporter" %% "scala-uri" % "0.4.14",
 
-//  "io.circe" %% "circe-core" % "0.4.1",
+  //  "io.circe" %% "circe-core" % "0.4.1",
   "io.circe" %% "circe-generic" % "0.4.1",
-//  "io.circe" %% "circe-parser" % "0.4.1",
+  //  "io.circe" %% "circe-parser" % "0.4.1",
 
   // Utilities
   "joda-time" % "joda-time" % "2.9.3",
