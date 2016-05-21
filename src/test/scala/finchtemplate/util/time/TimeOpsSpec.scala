@@ -2,38 +2,27 @@ package finchtemplate.util.time
 
 import finchtemplate.spec.SpecHelper
 import org.joda.time.DateTime
+import org.scalacheck.Prop._
+import org.scalacheck.Properties
+import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class TimeOpsSpec extends Specification with SpecHelper {
-  private val epochString = "1970-01-01T00:00:00.000Z"
-  private val epochDateTime = DateTime.parse(epochString)
-  private val christmasString = "2015-12-25T00:00:00.000Z"
-  private val christmasDateTime = DateTime.parse(christmasString)
-
-  "Conversion from millis" >> {
-    "the epoch is the epoch" >> {
-      TimeOps.toIso8601(0L) must beEqualTo(epochString)
-    }
-
-    "christmas 2015" >> {
-      TimeOps.toIso8601(christmasDateTime.getMillis) must beEqualTo(christmasString)
+final class TimeOpsSpec extends Specification with ScalaCheck with SpecHelper {
+  val milliConversionProps = new Properties("Milliseconds to String conversions") {
+    property("roundtrip parsing using millis") = forAll { (millis: Long) =>
+      val roundtrip = TimeOps.parseAsTime(TimeOps.toIso8601(millis))
+      roundtrip.contains(DateTime.parse(TimeOps.toIso8601(millis), TimeOps.iso8601Parser))
     }
   }
 
-  "Conversion from datetime" >> {
-    "the epoch is the epoch" >> {
-      TimeOps.toIso8601(epochDateTime) must beEqualTo(epochString)
-    }
+  s2"Milliseconds to String conversions$milliConversionProps"
 
-    "christmas 2015" >> {
-      TimeOps.toIso8601(christmasDateTime) must beEqualTo(christmasString)
+  val dateTimeConversionProps = new Properties("DateTime to String conversions") {
+    property("roundtrip parsing using datetime") = forAll { (d: DateTime) =>
+      val roundtrip = TimeOps.parseAsTime(TimeOps.toIso8601(d))
+      roundtrip.contains(DateTime.parse(TimeOps.toIso8601(d), TimeOps.iso8601Parser))
     }
   }
 
-  "Round trip" >> {
-    "conversions work" >> {
-      TimeOps.parseAsTime(TimeOps.toIso8601(epochDateTime)) must beEqualTo(Some(epochDateTime))
-      TimeOps.parseAsTime(TimeOps.toIso8601(christmasDateTime)) must beEqualTo(Some(DateTime.parse(christmasString)))
-    }
-  }
+  s2"DateTime to String conversions$dateTimeConversionProps"
 }
