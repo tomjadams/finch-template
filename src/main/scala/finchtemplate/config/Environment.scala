@@ -11,13 +11,6 @@ object Environment extends ConfigUtils {
   }
 }
 
-final class MigrationBootstrap extends Env {
-  override val name = "migration_bootstrap"
-  override val isDevelopment = false
-  override val isTest = false
-  override val isProduction = false
-}
-
 final class Development extends Env {
   override val name = "development"
   override val isDevelopment = true

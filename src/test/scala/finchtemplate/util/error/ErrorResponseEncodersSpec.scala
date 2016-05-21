@@ -1,31 +1,31 @@
 package finchtemplate.util.error
 
-import finchtemplate.spec.NonDatabaseTestHelper
+import finchtemplate.spec.SpecHelper
+import finchtemplate.util.error.ErrorResponseEncoders._
+import io.circe.syntax._
+import org.scalacheck.Prop.forAll
+import org.scalacheck.Properties
+import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-// TODO TJA Rewrite this as properties
-final class ErrorResponseEncodersSpec extends Specification with NonDatabaseTestHelper {
-  "Encode failure response" >> {
-    "encodes failures into an error object" >> {
-      val encoder = ErrorResponseEncoders.exceptionResponseEncoder
-      val buff = encoder(new Exception("meh", new Exception("bzzt")))
-      val output = new Array[Byte](buff.length)
-      buff.write(output, 0)
-      val encoded = new String(output)
-      encoded must beEqualTo( """{"error":{"message":"meh","type":"Exception","cause":"bzzt"}}""")
+final class ErrorResponseEncodersSpec extends Specification with ScalaCheck with SpecHelper {
+
+  val encodeProp = new Properties("Hello encoding") {
+    property("without exception cause") = forAll(genExceptionNoCause) { (e: java.lang.Exception) =>
+      e.asJson.noSpaces == s"""{"message":"${e.getMessage}","type":"Exception"}"""
+    }
+    property("with exception cause") = forAll(genExceptionCause) { (e: java.lang.Exception) =>
+      e.asJson.noSpaces == s"""{"message":"${e.getMessage}","type":"Exception","cause":"${e.getCause.getMessage}"}"""
     }
   }
 
-  "JSON encoding" >> {
-    "Throwable encode" >> {
-      "without a cause" >> {
-        val encoded = ErrorResponseEncoders.exceptionEncoder(new Exception("meh")).noSpaces
-        encoded must beEqualTo( """{"message":"meh","type":"Exception"}""")
-      }
-      "with cause" >> {
-        val encoded = ErrorResponseEncoders.exceptionEncoder(new Exception("meh", new Exception("bzzt"))).noSpaces
-        encoded must beEqualTo( """{"message":"meh","type":"Exception","cause":"bzzt"}""")
-      }
+  s2"Exception can be encoded into JSON$encodeProp"
+
+  val responseProp = new Properties("Exception response encoding") {
+    property("encode") = forAll(genException) { (e: java.lang.Exception) =>
+      toResponseString(e) == s"""{"error":${e.asJson.noSpaces}}"""
     }
   }
+
+  s2"Exception can be encoded into a response JSON$responseProp"
 }

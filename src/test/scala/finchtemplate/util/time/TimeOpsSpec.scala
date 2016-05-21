@@ -1,9 +1,10 @@
 package finchtemplate.util.time
 
+import finchtemplate.spec.SpecHelper
 import org.joda.time.DateTime
 import org.specs2.mutable.Specification
 
-final class TimeOpsSpec extends Specification {
+final class TimeOpsSpec extends Specification with SpecHelper {
   private val epochString = "1970-01-01T00:00:00.000Z"
   private val epochDateTime = DateTime.parse(epochString)
   private val christmasString = "2015-12-25T00:00:00.000Z"

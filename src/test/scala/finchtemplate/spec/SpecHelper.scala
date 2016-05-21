@@ -1,11 +1,12 @@
 package finchtemplate.spec
 
+import finchtemplate.config.Config
 import finchtemplate.util.log.Logger
 import org.specs2.execute.Failure
 import org.specs2.specification.BeforeAll
 
-trait NonDatabaseTestHelper extends TestEnvironmentSetter with DataStubGenerator with BeforeAll {
-  lazy val log = new Logger("finch-template-test")
+trait SpecHelper extends TestEnvironmentSetter with Generators with JsonCodecHelper with BeforeAll {
+  lazy val log = new Logger(s"${Config.coreLoggerName}-test")
 
   override def beforeAll() = setEnvironment()
 

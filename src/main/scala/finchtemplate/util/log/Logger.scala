@@ -1,17 +1,15 @@
 package finchtemplate.util.log
 
-//import com.twitter.logging.{Logger => FinagleLogger}
-
+import finchtemplate.config.Config
 import org.slf4j.LoggerFactory
 
 trait Logging {
-  lazy val log = new Logger("liege")
+  lazy val log = new Logger(Config.coreLoggerName)
 }
 
 object Logger extends Logging
 
 final class Logger(name: String) {
-  //  lazy val log = FinagleLogger(name)
   lazy val log = LoggerFactory.getLogger(name)
 
   def infoS(s: String) {

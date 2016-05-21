@@ -1,18 +1,14 @@
 package finchtemplate.api.v1.hello
 
 import finchtemplate.api.v1.hello.HelloResponseEncoders._
-import finchtemplate.spec.{JsonCodecHelper, NonDatabaseTestHelper}
+import finchtemplate.spec.SpecHelper
 import io.circe.syntax._
 import org.scalacheck.Prop._
-import org.scalacheck.{Arbitrary, Gen, Properties}
+import org.scalacheck.Properties
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class HelloResponseEncodersSpec extends Specification with ScalaCheck with JsonCodecHelper with NonDatabaseTestHelper {
-
-  val genHello = for {v <- Gen.alphaStr} yield Hello(v)
-
-  implicit def abHello: Arbitrary[Hello] = Arbitrary(genHello)
+final class HelloResponseEncodersSpec extends Specification with ScalaCheck with SpecHelper {
 
   val encodeProp = new Properties("Hello encoding") {
     property("encode") = forAll { (h: Hello) =>
@@ -28,5 +24,5 @@ final class HelloResponseEncodersSpec extends Specification with ScalaCheck with
     }
   }
 
-  s2"Responses can be encoded into JSON$responseProp"
+  s2"Hello can be encoded into a response JSON$responseProp"
 }

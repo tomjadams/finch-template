@@ -1,9 +1,9 @@
 package finchtemplate.config
 
-import finchtemplate.spec.NonDatabaseTestHelper
+import finchtemplate.spec.SpecHelper
 import org.specs2.mutable.Specification
 
-final class EnvironmentSpec extends Specification with NonDatabaseTestHelper {
+final class EnvironmentSpec extends Specification with SpecHelper {
   val development = new Development()
   val test = new Test()
   val production = new Production()
