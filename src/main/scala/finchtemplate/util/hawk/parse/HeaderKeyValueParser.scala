@@ -13,6 +13,6 @@ object HeaderKeyValueParser {
   def parseKeyValue(kv: HeaderKeyValue): Option[Map[HeaderKey, HeaderValue]] = {
     val key = keyRegex.findFirstMatchIn(kv).map { m => m.group("key") }
     val value = valueRegex.findFirstMatchIn(kv).map { m => m.group("value") }
-    for (x <- key; y <- value) yield Map(x.trim -> y.trim)
+    for (x <- key; y <- value) yield Map(x.trim.toLowerCase -> y.trim)
   }
 }
