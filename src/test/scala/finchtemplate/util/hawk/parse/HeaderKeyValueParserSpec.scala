@@ -8,39 +8,20 @@ import org.specs2.mutable.Specification
 
 final class HeaderKeyValueParserSpec extends Specification with ScalaCheck with SpecHelper {
   val invalidkeyValues = List(
+    """a=b""",
+    """a=1""",
     """="dh37fgj492je"""",
     """"dh37fgj492je"""",
     """dh37fgj492je""",
     """dh37fgj492je=""",
-    """id="dh37fgj492je""""",
-    """id=dh37fgj492je""""",
-    """id="dh37fgj492je"""",
-    """id=="dh37fgj492je"""",
-    """id =="dh37fgj492je"""",
-    """id== "dh37fgj492je"""",
-    """id == "dh37fgj492je"""",
-    """id==""dh37fgj492je"""",
-    """id==""dh37fgj492je""""",
-    """id=="dh37"fgj492je"""",
-    """, ts="1353832234"""",
-    """,, ts="1353832234"""",
-    """ts="1353832234,"""",
-    """ts="1353832234",""",
-    """ts="1353832234",,""",
-    """ts="1353832234""""",
-    """ts="1353832234"""",
     """t=s="1353832234"""",
     """t$s="1353832234"""",
     """t@s="1353832234"""",
     """@t@s="1353832234"""",
-    """@ts#="1353832234"""",
-    """t1s="1353832234"""",
-    """ts1="1353832234"""",
-    """1ts="1353832234"""",
-    """1ts1="1353832234""""
+    """@ts#="1353832234""""
   )
 
-  val genKnownInvalidHeaderValues:Gen[HeaderKeyValue]  = Gen.oneOf(invalidkeyValues)
+  val genKnownInvalidHeaderValues: Gen[HeaderKeyValue] = Gen.oneOf(invalidkeyValues)
   val genRandomStrings: Gen[HeaderKeyValue] = Arbitrary.arbString.arbitrary
 
   val invalidKeyValuesProp = new Properties("Invalid/unsupported header key/value parsing") {
@@ -57,21 +38,74 @@ final class HeaderKeyValueParserSpec extends Specification with ScalaCheck with 
   s2"Parsing invalid/unsupported authentication headers$invalidKeyValuesProp"
 
   val knownGoodHeaderKeyValues = List(
+    """a=""""",
+    """a="b"""",
+    """a="1"""",
+    """foo="bar"""",
     """ id="dh37fgj492je"""",
     """ id ="dh37fgj492je"""",
     """ id= "dh37fgj492je"""",
     """ id = "dh37fgj492je"""",
     """ id="dh37fgj492je """",
+    """id="dh37fgj492je""""",
     """id="dh37fgj492je """",
+    """id="dh37fgj492je"""",
+    """id=="dh37fgj492je"""",
+    """id =="dh37fgj492je"""",
+    """id== "dh37fgj492je"""",
+    """id == "dh37fgj492je"""",
+    """id==""dh37fgj492je"""",
+    """id==""dh37fgj492je""""",
+    """id=="dh37"fgj492je"""",
+    """, ts="1353832234"""",
+    """,, ts="1353832234"""",
+    """ts="1353832234,"""",
+    """ts="1353832234",,""",
+    """ts="1353832234",""",
+    """id="dh37fgj492je"""",
+    """id=="dh37fgj492je"""",
+    """id =="dh37fgj492je"""",
+    """id== "dh37fgj492je"""",
+    """id == "dh37fgj492je"""",
+    """id==""dh37fgj492je"""",
+    """id==""dh37fgj492je""""",
+    """id=="dh37"fgj492je"""",
+    """id=dh37fgj492je""""",
+    """, ts="1353832234"""",
+    """,, ts="1353832234"""",
+    """ts="1353832234,"""",
+    """ts="1353832234",""",
     """ ts="1353832234"""",
+    """t1s="1353832234"""",
+    """ts1="1353832234"""",
+    """ts_1="1353832234"""",
+    """ts_a1="1353832234"""",
+    """ts_a_1="1353832234"""",
+    """1ts1="1353832234"""",
+    """ts1="1353832234"""",
+    """1ts="1353832234"""",
+    """1ts1="1353832234"""",
     """ nonce="j4h3g2"""",
     """   hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY="""",
     """ext="some-app-ext-data"""",
     """ mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw=""""
   )
+  val knownGoodHeaderValues = List(
+    """b""",
+    """1""",
+    """bar""",
+    """dh37fgj492je""",
+    """1353832234""",
+    """dh37fgj492je""",
+    """j4h3g2""",
+    """Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=""",
+    """some-app-ext-data""",
+    """some app ext data""",
+    """aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""
+  )
 
-  val genKnownGoodHeaderValues: Gen[HeaderKeyValue] = Gen.oneOf(knownGoodHeaderKeyValues)
-  val genHeaderKey: Gen[HeaderKey] = Gen.alphaStr
+  val genKnownGoodHeaderValues: Gen[HeaderKeyValue] = Gen.oneOf(knownGoodHeaderValues)
+  val genHeaderKey: Gen[HeaderKey] = Gen.identifier.suchThat(_.forall(c => !c.isSpaceChar && !c.isWhitespace))
   val genHeaderValue: Gen[HeaderValue] = Gen.frequency((1, Gen.alphaStr), (1, Gen.numStr), (4, genKnownGoodHeaderValues))
 
   val parseProp = new Properties("Auth header key/value parsing") {
@@ -81,11 +115,15 @@ final class HeaderKeyValueParserSpec extends Specification with ScalaCheck with 
     }
     property("generated good key/values") = forAll(genHeaderKey, genHeaderValue) { (key: HeaderKey, value: HeaderValue) =>
       val parsed = HeaderKeyValueParser.parse(headerKeyValue(key, value))
+
+      log.infoS(s"Expected: ${Map(key -> value)} from ${headerKeyValue(key, value)}")
+      log.infoS(s"Actual: ${parsed}")
+
       parsed must beSome(Map(key -> value))
     }
   }
 
   s2"Parsing valid authentication headers$parseProp"
 
-  private def headerKeyValue(key: String, value: String): HeaderKeyValue = s""" $key="$value""""
+  private def headerKeyValue(key: HeaderKey, value: HeaderValue): HeaderKeyValue = s"""$key="$value""""
 }
