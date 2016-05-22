@@ -7,11 +7,17 @@ import org.joda.time.format.ISODateTimeFormat
 import scala.util.control.NonFatal
 
 trait TimeOps {
-  val iso8601Formatter = ISODateTimeFormat.dateTime()
-  val iso8601Parser = ISODateTimeFormat.dateTimeParser.withOffsetParsed()
+  private val iso8601Formatter = ISODateTimeFormat.dateTime()
+  private[finchtemplate] val iso8601Parser = ISODateTimeFormat.dateTimeParser.withOffsetParsed()
 
-  def parseAsTime(iso8601: String): Option[DateTime] = try {
+  def parseIsoAsTime(iso8601: String): Option[DateTime] = try {
     Some(DateTime.parse(iso8601, iso8601Parser))
+  } catch {
+    case NonFatal(t) => None
+  }
+
+  def parseMillisAsTime(millis: String): Option[DateTime] = try {
+    Some(new DateTime(millis.toLong))
   } catch {
     case NonFatal(t) => None
   }

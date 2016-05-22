@@ -26,6 +26,7 @@ Here's some further reading on how this hangs together, and how to do more/exten
 * [Finch 101](http://vkostyukov.ru/slides/finch-101/)
 * [Getting started with Finagle](http://andrew-jones.com/blog/getting-started-with-finagle/)
 * [An introduction to Finagle](http://twitter.github.io/scala_school/finagle.html)
+* [Herding Cats](http://eed3si9n.com/herding-cats/) - an introduction/tutorial on Cats
 
 # TODO
 
