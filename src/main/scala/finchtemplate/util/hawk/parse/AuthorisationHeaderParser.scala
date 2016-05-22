@@ -1,17 +1,17 @@
 package finchtemplate.util.hawk.parse
 
+import finchtemplate.util.hawk.parse.HeaderKeyValueParser.parseKeyValue
 import finchtemplate.util.hawk.{AuthorisationHeader, _}
 
 //Authorization: Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="
 object AuthorisationHeaderParser {
   private val headerPrefix = "Hawk "
 
-  def parse(header: RawAuthenticationHeader): Option[AuthorisationHeader] = {
+  def parseAuthHeader(header: RawAuthenticationHeader): Option[AuthorisationHeader] = {
     if (header.startsWith(headerPrefix)) {
-      val map: Array[Array[String]] = header.split(",").map(_.split("="))
+      val left: Map[HeaderKey, HeaderValue] = parseKeyValues(header)
 
-      map.foldLeft(Map[String, String]())((acc, kv) => acc ++ Map(kv(0) -> kv(1)))
-
+      left
 
       None
     } else {
@@ -19,4 +19,8 @@ object AuthorisationHeaderParser {
     }
   }
 
+  private def parseKeyValues(header: RawAuthenticationHeader): Map[HeaderKey, HeaderValue] = {
+    val kvs = header.split(",").map(kv => parseKeyValue(kv))
+    kvs.foldLeft(Map[HeaderKey, HeaderValue]())((acc, maybeKv) => acc ++ maybeKv.getOrElse(Map()))
+  }
 }
