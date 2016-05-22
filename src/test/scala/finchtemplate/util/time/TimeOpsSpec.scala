@@ -9,7 +9,7 @@ import org.specs2.mutable.Specification
 
 final class TimeOpsSpec extends Specification with ScalaCheck with SpecHelper {
   val milliConversionProps = new Properties("Milliseconds to String conversions") {
-    property("roundtrip parsing using millis") = forAll { (millis: Long) =>
+    property("roundtrip parsing using millis") = forAll { (millis: Millis) =>
       val roundtrip = TimeOps.parseAsTime(TimeOps.toIso8601(millis))
       roundtrip must beSome(DateTime.parse(TimeOps.toIso8601(millis), TimeOps.iso8601Parser))
     }

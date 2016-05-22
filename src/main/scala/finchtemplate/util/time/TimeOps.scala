@@ -16,7 +16,7 @@ trait TimeOps {
     case NonFatal(t) => None
   }
 
-  def toIso8601(millis: Long): String = toIso8601(new DateTime(millis, UTC))
+  def toIso8601(millis: Millis): String = toIso8601(new DateTime(millis, UTC))
 
   def toIso8601(time: DateTime): String = iso8601Formatter.print(time)
 }
