@@ -9,5 +9,5 @@ trait ApiSpecification {
 
   def port: Int
 
-  def absoluteUrl(path: String): URL = new URL(scheme, host, port, path)
+  def absoluteBaseUrl(path: String): URL = new URL(scheme, host, port, path)
 }

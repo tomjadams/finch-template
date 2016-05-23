@@ -1,5 +1,8 @@
 package finchtemplate.util.hawk.parse
 
+import finchtemplate.util.hawk.TaggedTypesFunctions.{HeaderKey, HeaderValue}
+import finchtemplate.util.hawk.{HeaderKey, HeaderKeyValue, HeaderValue, TaggedTypesFunctions}
+
 import scala.util.matching.Regex
 
 /**
@@ -13,6 +16,6 @@ object HeaderKeyValueParser {
   def parseKeyValue(kv: HeaderKeyValue): Option[Map[HeaderKey, HeaderValue]] = {
     val key = keyRegex.findFirstMatchIn(kv).map { m => m.group("key") }
     val value = valueRegex.findFirstMatchIn(kv).map { m => m.group("value") }
-    for (x <- key; y <- value) yield Map(x.trim.toLowerCase -> y.trim)
+    for (x <- key; y <- value) yield Map(HeaderKey(x.trim.toLowerCase) -> HeaderValue(y.trim))
   }
 }

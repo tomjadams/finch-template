@@ -9,7 +9,7 @@ It aims to provide:
 * A HTTP stack, using [Finch](https://github.com/finagle/finch);
 * Authentication support using [Hawk](https://github.com/hueniverse/hawk), a HMAC-style protocol;
 * JSON encoding & decoding, using [Circe](https://github.com/travisbrown/circe);
-* Clients for talking to downstream services;
+* Clients for talking to downstream services using [Featherbed](https://finagle.github.io/featherbed);
 * Centralised logging using syslog;
 * Monitoring & [metrics](https://twitter.github.io/finagle/guide/Metrics.html) support using ...;
 * Consistent error handling;

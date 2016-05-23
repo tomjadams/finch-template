@@ -1,5 +1,7 @@
 package finchtemplate.util
 
+import shapeless.tag.@@
+
 package object time {
-  type Millis = Long
+  type Millis = Long @@ MillisTag
 }
