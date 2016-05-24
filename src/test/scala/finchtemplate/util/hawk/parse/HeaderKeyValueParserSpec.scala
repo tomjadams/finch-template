@@ -16,10 +16,6 @@ final class HeaderKeyValueParserSpec extends Specification with ScalaCheck with 
     """"dh37fgj492je"""",
     """dh37fgj492je""",
     """dh37fgj492je=""",
-    """t=s="1353832234"""",
-    """t$s="1353832234"""",
-    """t@s="1353832234"""",
-    """@t@s="1353832234"""",
     """@ts#="1353832234""""
   ).map(HeaderKeyValue)
 
@@ -90,7 +86,11 @@ final class HeaderKeyValueParserSpec extends Specification with ScalaCheck with 
     """ nonce="j4h3g2"""",
     """   hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY="""",
     """ext="some-app-ext-data"""",
-    """ mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw=""""
+    """ mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
+    """t@s="1353832234"""",
+    """t=s="1353832234"""",
+    """t$s="1353832234"""",
+    """@t@s="1353832234""""
   ).map(HeaderKeyValue)
   val knownGoodHeaderValues = List(
     """b""",
@@ -106,9 +106,9 @@ final class HeaderKeyValueParserSpec extends Specification with ScalaCheck with 
     """aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""
   ).map(HeaderValue)
 
-  val genKnownGoodHeaderKeyValues: Gen[HeaderKeyValue] = Gen.oneOf(knownGoodHeaderKeyValues)
   val genKnownGoodHeaderValues: Gen[HeaderValue] = Gen.oneOf(knownGoodHeaderValues)
   val genHeaderKey: Gen[HeaderKey] = Gen.identifier.map(HeaderKey)
+  val genKnownGoodHeaderKeyValues: Gen[HeaderKeyValue] = Gen.oneOf(knownGoodHeaderKeyValues)
 
   val genHeaderValue: Gen[HeaderValue] = Gen.frequency(
     (1, Gen.alphaStr.map(HeaderValue)),
@@ -119,15 +119,11 @@ final class HeaderKeyValueParserSpec extends Specification with ScalaCheck with 
   val parseProp = new Properties("Auth header key/value parsing") {
     property("known good key/values") = forAll(genKnownGoodHeaderKeyValues) { (kv: HeaderKeyValue) =>
       val parsed = HeaderKeyValueParser.parseKeyValue(kv)
-      // TODO TJA Get this working...
-      //parsed must beSome
-      "" == ""
+      parsed must beSome
     }
     property("generated good key/values") = forAll(genHeaderKey, genHeaderValue) { (key: HeaderKey, value: HeaderValue) =>
       val parsed = HeaderKeyValueParser.parseKeyValue(headerKeyValue(key, value))
-      // TODO TJA Get this working...
-      //parsed must beSome(Map(key -> value))
-      "" == ""
+      parsed must beSome(Map(key.toLowerCase -> value))
     }
   }
 

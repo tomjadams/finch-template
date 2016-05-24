@@ -1,7 +1,7 @@
 package finchtemplate.util.hawk.parse
 
 import finchtemplate.util.hawk.TaggedTypesFunctions.{HeaderKey, HeaderValue}
-import finchtemplate.util.hawk.{HeaderKey, HeaderKeyValue, HeaderValue, TaggedTypesFunctions}
+import finchtemplate.util.hawk.{HeaderKey, HeaderKeyValue, HeaderValue}
 
 import scala.util.matching.Regex
 
@@ -10,7 +10,7 @@ import scala.util.matching.Regex
   * pairs.
   */
 object HeaderKeyValueParser {
-  private val keyRegex = new Regex("""([_a-zA-Z]+?[_a-zA-Z0-9]{1,256})\s*=""", "key")
+  private val keyRegex = new Regex("""([_a-zA-Z]+?[_a-zA-Z0-9]*)\s*=""", "key")
   private val valueRegex = new Regex("""\"(.*)\"""", "value")
 
   def parseKeyValue(kv: HeaderKeyValue): Option[Map[HeaderKey, HeaderValue]] = {
