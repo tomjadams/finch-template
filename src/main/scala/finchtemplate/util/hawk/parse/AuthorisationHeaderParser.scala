@@ -7,10 +7,8 @@ import finchtemplate.util.time.TaggedTypesFunctions.Millis
 import finchtemplate.util.time.TimeOps._
 
 object AuthorisationHeaderParser {
-  private val headerPrefix = "Hawk "
-
   def parseAuthHeader(header: RawAuthenticationHeader): Option[AuthorisationHeader] =
-    if (header.startsWith(headerPrefix)) {
+    if (header.startsWith(s"$HawkHeaderPrefix ")) {
       parseSupportedHeader(header)
     } else {
       None

@@ -13,4 +13,8 @@ package object hawk {
   type HeaderKeyValue = String @@ HeaderKeyValueTag
   type HeaderKey = String @@ HeaderKeyTag
   type HeaderValue = String @@ HeaderValueTag
+
+  val MustAuthenticateHeader = "WWW-Authenticate"
+  val AuthorisationHeader = "Authorization"
+  val HawkHeaderPrefix = "Hawk "
 }
