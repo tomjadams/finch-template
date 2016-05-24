@@ -1,8 +1,7 @@
 package finchtemplate.util.hawk.parse
 
 import finchtemplate.spec.SpecHelper
-import finchtemplate.util.hawk
-import finchtemplate.util.hawk.TaggedTypesFunctions.KeyId
+import finchtemplate.util.hawk.TaggedTypesFunctions.{KeyId, ExtendedData => _, Nonce => _, PayloadHash => _, RawAuthenticationHeader => _, _}
 import finchtemplate.util.hawk.{TaggedTypesFunctions => UTTF, _}
 import finchtemplate.util.time._
 import org.scalacheck.Prop._
@@ -56,13 +55,7 @@ final class AuthorisationHeaderParserSpec extends Specification with ScalaCheck 
 
   s2"Parsing invalid/unsupported authentication headers$invalidHeadersProp"
 
-  implicit val arbKeyId = Arbitrary.arbitrary[String].map(KeyId)
-  implicit val arbMillis = Arbitrary.arbitrary[String].map(KeyId)
-  implicit val arbKeyId = Arbitrary.arbitrary[String].map(KeyId)
-  implicit val arbKeyId = Arbitrary.arbitrary[String].map(KeyId)
-  implicit val arbKeyId = Arbitrary.arbitrary[String].map(KeyId)
-  implicit val arbKeyId = Arbitrary.arbitrary[String].map(KeyId)
-  implicit val arbKeyId = Arbitrary.arbitrary[String].map(KeyId)
+  import Arbitraries._
 
   val parseProp = new Properties("Auth header parsing") {
     property("parsing") = forAll {
