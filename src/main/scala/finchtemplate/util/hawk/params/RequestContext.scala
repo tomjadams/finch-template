@@ -9,9 +9,10 @@ case class UriPath(uri: URI)
 
 case class Host(host: String)
 
-case class Time(millisSinceEpocj: Millis)
+case class Port(port: Int)
 
-// request payload, put vs. post vs. get
+case class Time(millisSinceEpoch: Millis)
 
-case class RequestContext(method: HttpMethod, host: Host, uriPath: UriPath, time: Time, authHeader: AuthorisationHeader)
+case class RequestContext(method: HttpMethod,
+  host: Host, uriPath: UriPath, time: Time, authHeader: AuthorisationHeader, payload: Option[Payload])
 

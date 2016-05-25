@@ -1,7 +1,7 @@
 package finchtemplate.util.hawk
 
-import finchtemplate.util.hawk.params.RequestContext
+import finchtemplate.util.hawk.params.{KeyData, RequestContext}
 
 object HawkAuthenticate {
-  def authenticate(context: RequestContext): Boolean = false
+  def authenticate(key: KeyData, context: RequestContext): Boolean = false
 }
