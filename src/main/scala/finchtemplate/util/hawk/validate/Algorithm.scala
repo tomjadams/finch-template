@@ -1,4 +1,4 @@
-package finchtemplate.util.hawk
+package finchtemplate.util.hawk.validate
 
 object Algorithm {
   def algorithm(name: String): Option[Algorithm] = name match {

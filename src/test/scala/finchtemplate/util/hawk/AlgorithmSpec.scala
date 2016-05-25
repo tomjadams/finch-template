@@ -1,6 +1,7 @@
 package finchtemplate.util.hawk
 
 import finchtemplate.spec.SpecHelper
+import finchtemplate.util.hawk.validate.{Algorithm, Sha256, Sha512}
 import org.scalacheck.Prop._
 import org.scalacheck.Properties
 import org.specs2.ScalaCheck
