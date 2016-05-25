@@ -53,7 +53,7 @@ final class AuthorisationHeaderParserSpec extends Specification with ScalaCheck 
     property("generated headers") = forAll {
       (keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: PayloadHash, extendedData: ExtendedData, mac: MAC) =>
         val parsed = AuthorisationHeaderParser.parseAuthHeader(header(keyId, timestamp, nonce, payloadHash, extendedData, mac))
-        parsed must beSome(AuthorisationHeader(keyId, timestamp, nonce, payloadHash, extendedData, mac))
+        parsed must beSome(new AuthorisationHeader(keyId, timestamp, nonce, payloadHash, extendedData, mac))
     }
   }
 

@@ -1,6 +1,7 @@
 package finchtemplate.spec
 
 import finchtemplate.config.Config
+import finchtemplate.spec.gen.Generators
 import finchtemplate.util.log.Logger
 import org.specs2.execute.Failure
 import org.specs2.specification.BeforeAll
