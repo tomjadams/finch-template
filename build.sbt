@@ -17,6 +17,7 @@ libraryDependencies ++= Seq(
   // Utilities
   "joda-time" % "joda-time" % "2.9.3",
   "org.joda" % "joda-convert" % "1.8",
+  "com.github.benhutchison" %% "mouse" % "0.2",
 
   // Logging
   "ch.qos.logback" % "logback-core" % "1.1.7",
