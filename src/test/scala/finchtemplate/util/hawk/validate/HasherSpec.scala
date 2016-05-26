@@ -1,14 +1,14 @@
 package finchtemplate.util.hawk.validate
 
 import finchtemplate.spec.SpecHelper
-import finchtemplate.util.hawk.HawkVersionHeader
+import finchtemplate.util.hawk.HeaderValidationType
 import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk.params._
 import finchtemplate.util.time.TaggedTypesFunctions.Millis
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class HeaderHasherSpec extends Specification with ScalaCheck with SpecHelper {
+final class HasherSpec extends Specification with ScalaCheck with SpecHelper {
   val keyId = KeyId("username")
   val key = Key("password")
 
@@ -25,7 +25,7 @@ final class HeaderHasherSpec extends Specification with ScalaCheck with SpecHelp
 
   val normalisedRequestString =
     s"""
-       |$HawkVersionHeader
+       |$HeaderValidationType
        |$millis
        |$nonce
        |${method.headerCanonicalForm}
@@ -38,13 +38,13 @@ final class HeaderHasherSpec extends Specification with ScalaCheck with SpecHelp
 
   "A request header" >> {
     "can be hashed as SHA-256" >> {
-      val hash = HeaderHasher.hash(KeyData(keyId, key, Sha256), header)
-      hash must beEqualTo(Hash.computeHash(normalisedRequestString, Sha256))
+      val hash = Hasher.hash(KeyData(keyId, key, Sha256), header)
+      hash must beEqualTo(Hash.computeAndBase64Encode(normalisedRequestString, Sha256))
     }
 
     "can be hashed as SHA-512" >> {
-      val hash = HeaderHasher.hash(KeyData(keyId, key, Sha512), header)
-      hash must beEqualTo(Hash.computeHash(normalisedRequestString, Sha512))
+      val hash = Hasher.hash(KeyData(keyId, key, Sha512), header)
+      hash must beEqualTo(Hash.computeAndBase64Encode(normalisedRequestString, Sha512))
     }
   }
 }

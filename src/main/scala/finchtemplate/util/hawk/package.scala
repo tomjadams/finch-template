@@ -17,6 +17,6 @@ package object hawk {
   val MustAuthenticateHttpHeader = "WWW-Authenticate"
   val AuthorisationHttpHeader = "Authorization"
   val HawkHeaderValuePrefix = "Hawk"
-  val HawkVersionHeader = "hawk.1.header"
-  val HawkVersionPayload = "hawk.1.payload"
+  val HeaderValidationType = "hawk.1.header"
+  val PayloadValidationType = "hawk.1.payload"
 }

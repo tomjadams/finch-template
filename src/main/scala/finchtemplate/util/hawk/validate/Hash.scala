@@ -16,7 +16,7 @@ object HashTypes {
 }
 
 object Hash {
-  def computeHash(s: String, algorithm: Algorithm): Hash = {
+  def computeAndBase64Encode(s: String, algorithm: Algorithm): Hash = {
     val md = MessageDigest.getInstance(algorithm.javaAlgorithmName)
     md.update(s.getBytes(UTF_8))
     val encoded = Base64.getEncoder.encodeToString(md.digest())
@@ -25,4 +25,4 @@ object Hash {
 
 }
 
-case class Hash(hash: HashTypes.Base64Encoded, algorithm: Algorithm)
+case class Hash(encodedForm: HashTypes.Base64Encoded, algorithm: Algorithm)
