@@ -8,7 +8,7 @@ import finchtemplate.util.time.TaggedTypesFunctions.Millis
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class HeaderHashSpec extends Specification with ScalaCheck with SpecHelper {
+final class HeaderHasherSpec extends Specification with ScalaCheck with SpecHelper {
   val keyId = KeyId("username")
   val key = Key("password")
 

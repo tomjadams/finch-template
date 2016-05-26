@@ -6,7 +6,7 @@ import finchtemplate.util.hawk.params.{ContentType, KeyData, PayloadContext}
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class PayloadHashSpec extends Specification with ScalaCheck with SpecHelper {
+final class PayloadHasherSpec extends Specification with ScalaCheck with SpecHelper {
 
   "A request header" >> {
     val keyData = KeyData(KeyId("username"), Key("password"), Sha256)
