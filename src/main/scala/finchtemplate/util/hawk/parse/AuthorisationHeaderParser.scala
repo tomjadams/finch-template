@@ -9,7 +9,7 @@ import finchtemplate.util.time.TimeOps._
 
 object AuthorisationHeaderParser {
   def parseAuthHeader(header: RawAuthenticationHeader): Option[AuthorisationHeader] =
-    if (header.startsWith(s"$HawkHeaderPrefix ")) {
+    if (header.startsWith(s"$HawkHeaderValuePrefix ")) {
       parseSupportedHeader(header)
     } else {
       None

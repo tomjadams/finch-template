@@ -11,17 +11,18 @@ object Algorithm {
 sealed trait Algorithm {
   def name: String
 
-  def javaAlgorithmClass: String
+  // From: https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html#MessageDigest
+  def javaAlgorithmName: String
 }
 
 case object Sha256 extends Algorithm {
   override val name = "sha256"
 
-  override val javaAlgorithmClass = "HmacSHA256"
+  override val javaAlgorithmName = "SHA-256"
 }
 
 case object Sha512 extends Algorithm {
   override val name = "sha512"
 
-  override val javaAlgorithmClass = "HmacSHA512"
+  override val javaAlgorithmName = "SHA-512"
 }

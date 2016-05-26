@@ -1,37 +1,37 @@
 package finchtemplate.util.hawk.params
 
 sealed trait HttpMethod {
-  def asString: String
+  def headerCanonicalForm: String
 }
 
 case object Options extends HttpMethod {
-  override val asString = "OPTIONS"
+  override val headerCanonicalForm = "OPTIONS"
 }
 
 case object Head extends HttpMethod {
-  override val asString = "HEAD"
+  override val headerCanonicalForm = "HEAD"
 }
 
 case object Get extends HttpMethod {
-  override val asString = "GET"
+  override val headerCanonicalForm = "GET"
 }
 
 case object Post extends HttpMethod {
-  override val asString = "HEAD"
+  override val headerCanonicalForm = "HEAD"
 }
 
 case object Put extends HttpMethod {
-  override val asString = "HEAD"
+  override val headerCanonicalForm = "HEAD"
 }
 
 case object Delete extends HttpMethod {
-  override val asString = "DELETE"
+  override val headerCanonicalForm = "DELETE"
 }
 
 case object Trace extends HttpMethod {
-  override val asString = "TRACE"
+  override val headerCanonicalForm = "TRACE"
 }
 
 case object Patch extends HttpMethod {
-  override val asString = "PATCH"
+  override val headerCanonicalForm = "PATCH"
 }
