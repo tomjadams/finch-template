@@ -5,10 +5,10 @@ import javax.crypto
 import javax.crypto.spec.SecretKeySpec
 
 import finchtemplate.util.hawk.TaggedTypesFunctions._
-import finchtemplate.util.hawk.{Base64Encoded, MACC}
+import finchtemplate.util.hawk.{Base64Encoded, MAC}
 
 trait MacOps {
-  def mac(credentials: Credentials, data: Array[Byte]): MACC = MACC(base64Encode(createMac(credentials, data)))
+  def mac(credentials: Credentials, data: Array[Byte]): MAC = MAC(base64Encode(createMac(credentials, data)))
 
   def base64Encode(data: Array[Byte]): Base64Encoded = Base64Encoded(Base64.getEncoder.encodeToString(data))
 

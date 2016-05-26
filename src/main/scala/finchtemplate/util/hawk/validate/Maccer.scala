@@ -6,11 +6,11 @@ import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.params.RequestContext
 
 object Maccer extends MacOps {
-  def requestMac(key: Credentials, context: RequestContext, method: ValidationMethod): MACC = {
+  def requestMac(key: Credentials, context: RequestContext, method: ValidationMethod): MAC = {
     ???
   }
 
-  def requestHash(credentials: Credentials, context: RequestContext, payloadMac: Option[MACC] = None): MACC = {
+  def requestHash(credentials: Credentials, context: RequestContext, payloadMac: Option[MAC] = None): MAC = {
     val normalisedRequestString =
       s"""
          |${HeaderValidationMethod.identifier}
