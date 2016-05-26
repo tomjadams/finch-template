@@ -18,33 +18,33 @@ final class HeaderHashSpec extends Specification with ScalaCheck with SpecHelper
   val path = UriPath("/search?q=hawk")
   val millis = Millis(System.currentTimeMillis())
 
-  val nonce = Nonce("abc")
-  val extendedData = ExtendedData("data")
-  val authHeader = new AuthorisationHeader(keyId, millis, nonce, PayloadHash("abcde"), extendedData, Mac("12afc"))
+  val nonce = Nonce("nonce-abc123")
+  val extendedData = ExtendedData("this is some extra data")
+  val authHeader = new AuthorisationHeader(keyId, millis, nonce, PayloadHash("hash-abcde"), extendedData, Mac("mac-12afc"))
   val header = HeaderContext(method, host, port, path, authHeader)
 
-  val headerCanonicalRequest =
+  val normalisedRequestString =
     s"""
        |$HawkVersionHeader
        |$millis
        |$nonce
        |${method.headerCanonicalForm}
-       |$path
-       |$host
-       |$port
+       |${path.path}
+       |${host.host}
+       |${port.port}
        |
        |$extendedData
-    """.stripMargin
+    """.stripMargin.trim
 
   "A request header" >> {
     "can be hashed as SHA-256" >> {
       val hash = HeaderHasher.hash(KeyData(keyId, key, Sha256), header)
-      hash must beEqualTo(Hash.computeHash(headerCanonicalRequest, Sha256))
+      hash must beEqualTo(Hash.computeHash(normalisedRequestString, Sha256))
     }
 
     "can be hashed as SHA-512" >> {
       val hash = HeaderHasher.hash(KeyData(keyId, key, Sha512), header)
-      hash must beEqualTo(Hash.computeHash(headerCanonicalRequest, Sha512))
+      hash must beEqualTo(Hash.computeHash(normalisedRequestString, Sha512))
     }
   }
 }
