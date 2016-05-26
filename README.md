@@ -11,7 +11,8 @@ It aims to provide:
 * JSON encoding & decoding, using [Circe](https://github.com/travisbrown/circe);
 * Clients for talking to downstream services using [Featherbed](https://finagle.github.io/featherbed);
 * Centralised logging using syslog;
-* Monitoring & [metrics](https://twitter.github.io/finagle/guide/Metrics.html) support using ...;
+* [Metrics](https://twitter.github.io/finagle/guide/Metrics.html) support using ...;
+* Monitoring via NewRelic;
 * Consistent error handling;
 * Tracing with [Zipkin](https://github.com/openzipkin/zipkin);
 * Testing using [specs2](https://etorreborre.github.io/specs2/) & [ScalaCheck](https://www.scalacheck.org);
