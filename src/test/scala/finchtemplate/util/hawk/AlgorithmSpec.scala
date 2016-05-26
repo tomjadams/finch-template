@@ -12,11 +12,11 @@ final class AlgorithmSpec extends Specification with ScalaCheck with SpecHelper 
   "Hawk algorithms" >> {
     "SHA 256" >> {
       Sha256.name must beEqualTo("sha256")
-      Sha256.javaAlgorithmName must beEqualTo("SHA-256")
+      Sha256.keyGeneratorAlgorithm must beEqualTo("HmacSHA256")
     }
     "SHA 512" >> {
       Sha512.name must beEqualTo("sha512")
-      Sha512.javaAlgorithmName must beEqualTo("SHA-512")
+      Sha512.keyGeneratorAlgorithm must beEqualTo("HmacSHA512")
     }
   }
 

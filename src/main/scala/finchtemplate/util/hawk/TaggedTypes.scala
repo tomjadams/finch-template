@@ -13,8 +13,6 @@ trait PayloadHashTag
 
 trait ExtendedDataTag
 
-trait MACTag
-
 trait RawAuthenticationHeaderTag
 
 trait HeaderKeyValueTag
@@ -22,6 +20,8 @@ trait HeaderKeyValueTag
 trait HeaderKeyTag
 
 trait HeaderValueTag
+
+trait Base64EncodedTag
 
 object TaggedTypesFunctions {
   def KeyId(s: String): @@[String, KeyIdTag] = tag[KeyIdTag](s)
@@ -34,8 +34,6 @@ object TaggedTypesFunctions {
 
   def ExtendedData(s: String): @@[String, ExtendedDataTag] = tag[ExtendedDataTag](s)
 
-  def Mac(s: String): @@[String, MACTag] = tag[MACTag](s)
-
   def RawAuthenticationHeader(s: String) = tag[RawAuthenticationHeaderTag](s)
 
   def HeaderKeyValue(s: String) = tag[HeaderKeyValueTag](s)
@@ -43,4 +41,6 @@ object TaggedTypesFunctions {
   def HeaderKey(s: String) = tag[HeaderKeyTag](s)
 
   def HeaderValue(s: String) = tag[HeaderValueTag](s)
+
+  def Base64Encoded(s: String) = tag[Base64EncodedTag](s)
 }

@@ -1,17 +1,23 @@
 package finchtemplate.util.hawk
 
-import finchtemplate.util.hawk.params.{KeyData, RequestContext}
-import finchtemplate.util.hawk.validate.HeaderValidator.validateHeader
+import finchtemplate.util.hawk.params.RequestContext
+import finchtemplate.util.hawk.validate.{Credentials, Maccer}
+
+sealed trait AuthenticationResult
+
+case object Invalid extends AuthenticationResult
+
+case object Valid extends AuthenticationResult
 
 /**
   * Authenticate an incoming request using Hawk.
-  *
-  * Performs header validation [1] by default, but will instead do payload validation [2] if a `Some(payload)` is
-  * provided in the `RequestContext`.
-  *
-  * [1] https://github.com/hueniverse/hawk#protocol-example
-  * [2] https://github.com/hueniverse/hawk#payload-validation
   **/
 object HawkAuthenticate {
-  def authenticate(key: KeyData, context: RequestContext): Boolean = ???
+
+  def authenticated(credentials: Credentials, context: RequestContext, method: ValidationMethod = PayloadValidationMethod): AuthenticationResult = {
+    val computedMac = Maccer.requestMac(credentials, context, method)
+    // TODO TJA Fix this.
+    //computedMac.encodedForm == context.header.clientAuthHeader.mac
+    Invalid
+  }
 }

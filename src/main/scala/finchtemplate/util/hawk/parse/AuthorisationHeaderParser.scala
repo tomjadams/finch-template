@@ -24,7 +24,9 @@ object AuthorisationHeaderParser {
       payloadHash <- kvs.get(HeaderKey("hash"))
       extendedData <- kvs.get(HeaderKey("ext"))
       mac <- kvs.get(HeaderKey("mac"))
-    } yield new AuthorisationHeader(KeyId(id), Millis(timestamp), Nonce(nonce), PayloadHash(payloadHash), ExtendedData(extendedData), Mac(mac))
+    } yield {
+      new AuthorisationHeader(KeyId(id), Millis(timestamp), Nonce(nonce), PayloadHash(payloadHash), ExtendedData(extendedData), MACC(Base64Encoded(mac)))
+    }
   }
 
   private def parseKeyValues(header: RawAuthenticationHeader): Map[HeaderKey, HeaderValue] = {
