@@ -1,7 +1,6 @@
 package finchtemplate.util.hawk.validate
 
 import finchtemplate.spec.SpecHelper
-import finchtemplate.util.hawk.utils.Base64Ops
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 

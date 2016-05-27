@@ -1,4 +1,4 @@
-package finchtemplate.util.hawk.utils
+package finchtemplate.util.hawk.validate
 
 import java.util.Base64
 

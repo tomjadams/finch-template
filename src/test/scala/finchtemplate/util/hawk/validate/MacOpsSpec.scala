@@ -2,7 +2,6 @@ package finchtemplate.util.hawk.validate
 
 import finchtemplate.spec.SpecHelper
 import finchtemplate.util.hawk.TaggedTypesFunctions._
-import finchtemplate.util.hawk.utils.MacOps
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
