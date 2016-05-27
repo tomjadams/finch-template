@@ -4,7 +4,7 @@ import finchtemplate.spec.SpecHelper
 import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk.params._
 import finchtemplate.util.hawk.utils.MacOps
-import finchtemplate.util.hawk.{HeaderValidationMethod, MAC}
+import finchtemplate.util.hawk.HeaderValidationMethod
 import finchtemplate.util.time.TaggedTypesFunctions.Millis
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification

@@ -2,7 +2,7 @@ package finchtemplate.util.hawk.parse
 
 import finchtemplate.spec.SpecHelper
 import finchtemplate.util.hawk.TaggedTypesFunctions.{ExtendedData => _, Nonce => _, PayloadHash => _, RawAuthenticationHeader => _}
-import finchtemplate.util.hawk.validate.AuthorisationHeader
+import finchtemplate.util.hawk.validate.{AuthorisationHeader, MAC}
 import finchtemplate.util.hawk.{TaggedTypesFunctions => UTTF, _}
 import finchtemplate.util.time._
 import org.scalacheck.Prop._

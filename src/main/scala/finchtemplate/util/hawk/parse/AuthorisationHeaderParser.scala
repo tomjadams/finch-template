@@ -3,7 +3,7 @@ package finchtemplate.util.hawk.parse
 import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk.parse.HeaderKeyValueParser.parseKeyValue
 import finchtemplate.util.hawk._
-import finchtemplate.util.hawk.validate.AuthorisationHeader
+import finchtemplate.util.hawk.validate.{AuthorisationHeader, MAC}
 import finchtemplate.util.time.TaggedTypesFunctions.Millis
 import finchtemplate.util.time.TimeOps._
 

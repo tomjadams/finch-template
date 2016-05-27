@@ -1,8 +1,8 @@
 package finchtemplate.util.hawk.parse
 
 import finchtemplate.spec.gen.Generators
-import finchtemplate.util.hawk.MAC
 import finchtemplate.util.hawk.TaggedTypesFunctions._
+import finchtemplate.util.hawk.validate.MAC
 import org.scalacheck.{Arbitrary, Gen}
 
 object Arbitraries {

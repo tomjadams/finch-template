@@ -3,9 +3,8 @@ package finchtemplate.util.hawk.utils
 import javax.crypto
 import javax.crypto.spec.SecretKeySpec
 
-import finchtemplate.util.hawk.MAC
 import finchtemplate.util.hawk.utils.Base64Ops._
-import finchtemplate.util.hawk.validate.Credentials
+import finchtemplate.util.hawk.validate.{Credentials, MAC}
 
 trait MacOps {
   def mac(credentials: Credentials, data: Array[Byte]): MAC = MAC(base64Encode(createMac(credentials, data)))
