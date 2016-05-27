@@ -22,29 +22,37 @@ object Maccer {
   def requestMac(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[Error, MAC] =
     method match {
       case HeaderValidationMethod => validateHeader(credentials, context)
-      case PayloadValidationMethod =>
-        validatePayload(credentials, context).getOrElse(left(new Error("No payload provided for payload validation")))
+      case PayloadValidationMethod => validatePayload(credentials, context)
     }
 
   private def validateHeader(credentials: Credentials, context: RequestContext): Xor[Error, MAC] =
     right(normalisedHeaderMac(credentials, context, None))
 
-  private def validatePayload(credentials: Credentials, context: RequestContext): Option[Xor[Error, MAC]] = {
+  private def validatePayload(credentials: Credentials, context: RequestContext): Xor[Error, MAC] = {
     context.payload.map { payloadContext =>
-      // TODO TJA Pull the optional hash out of the header, when it's optional
+      // TODO TJA Pull the optional hash out of the header, when it's been made optional.
       val payloadHash: Option[PayloadHash] = Some(context.clientAuthHeader.payloadHash)
 
       payloadHash match {
-        case Some(clientHash: PayloadHash) => {
-          right(normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientHash)))))
+        case Some(clientHash) => {
+          val macWithClientHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientHash))))
+          if (macWithClientHash.encoded == context.clientAuthHeader.mac) {
+            right(payloadMac(credentials, context, payloadContext))
+          } else {
+            left(new Error("MAC provided in request does not match the computed MAC (possible invalid payload hash)"))
+          }
         }
         case None => {
-          val computedMac = MacOps.mac(credentials, payloadContext.data)
-          val computedPayloadMac = normalisedPayloadMac(credentials, payloadContext, PayloadHash(computedMac.encoded))
-          right(normalisedHeaderMac(credentials, context, Some(computedPayloadMac)))
+          right(payloadMac(credentials, context, payloadContext))
         }
       }
-    }
+    }.getOrElse(left(new Error("No payload provided for payload validation")))
+  }
+
+  private def payloadMac(credentials: Credentials, context: RequestContext, payloadContext: PayloadContext): MAC = {
+    val computedMac = MacOps.mac(credentials, payloadContext.data)
+    val computedPayloadMac = normalisedPayloadMac(credentials, payloadContext, PayloadHash(computedMac.encoded))
+    normalisedHeaderMac(credentials, context, Some(computedPayloadMac))
   }
 
   private def normalisedHeaderMac(credentials: Credentials, context: RequestContext, payloadMac: Option[MAC]): MAC = {
