@@ -1,12 +1,12 @@
 package finchtemplate.util.hawk.validate
 
-import java.nio.charset.StandardCharsets._
-
 import cats.data.Xor
 import cats.data.Xor._
 import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.params.{PayloadContext, RequestContext}
+import finchtemplate.util.hawk.validate.NormalisedRequest._
+import finchtemplate.util.log.Logger
 
 object Maccer {
 
@@ -36,7 +36,11 @@ object Maccer {
       payloadHash match {
         case Some(clientHash) => {
           val macWithClientHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientHash))))
-          if (macWithClientHash.encoded == context.clientAuthHeader.mac) {
+
+          Logger.log.infoS(s"macWithClientHash.encoded: ${macWithClientHash.encoded}")
+          Logger.log.infoS(s"context.clientAuthHeader.payloadHash: ${context.clientAuthHeader.payloadHash}")
+
+          if (macWithClientHash.encoded == context.clientAuthHeader.payloadHash) {
             right(payloadMac(credentials, context, payloadContext))
           } else {
             left(new Error("MAC provided in request does not match the computed MAC (possible invalid payload hash)"))
@@ -50,34 +54,7 @@ object Maccer {
   }
 
   private def payloadMac(credentials: Credentials, context: RequestContext, payloadContext: PayloadContext): MAC = {
-    val computedMac = MacOps.mac(credentials, payloadContext.data)
-    val computedPayloadMac = normalisedPayloadMac(credentials, payloadContext, PayloadHash(computedMac.encoded))
+    val computedPayloadMac = normalisedPayloadMac(credentials, payloadContext)
     normalisedHeaderMac(credentials, context, Some(computedPayloadMac))
-  }
-
-  private def normalisedHeaderMac(credentials: Credentials, context: RequestContext, payloadMac: Option[MAC]): MAC = {
-    val normalised =
-      s"""
-         |${HeaderValidationMethod.identifier}
-         |${context.clientAuthHeader.timestamp}
-         |${context.clientAuthHeader.nonce}
-         |${context.method.headerCanonicalForm}
-         |${context.path.path}
-         |${context.host.host}
-         |${context.port.port}
-         |${payloadMac.map(h => h.encoded).getOrElse("")}
-         |${context.clientAuthHeader.extendedData}
-      """.stripMargin.trim + "\n"
-    MacOps.mac(credentials, normalised.getBytes(UTF_8))
-  }
-
-  private def normalisedPayloadMac(credentials: Credentials, payload: PayloadContext, payloadHash: PayloadHash): MAC = {
-    val normalised =
-      s"""
-         |${PayloadValidationMethod.identifier}
-         |${payload.contentType.contentType.toLowerCase}
-         |$payloadHash
-      """.stripMargin.trim + "\n"
-    MacOps.mac(credentials, normalised.getBytes(UTF_8))
   }
 }

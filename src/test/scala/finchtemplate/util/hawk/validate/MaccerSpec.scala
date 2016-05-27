@@ -60,7 +60,7 @@ final class MaccerSpec extends Specification with ScalaCheck with SpecHelper {
   }
 
   "Payload validation" >> {
-    val payload: PayloadContext = PayloadContext(ContentType("text/plain"), "some content".getBytes(UTF_8))
+    val payload: PayloadContext = PayloadContext(ContentType("text/plain"), "Thank you for flying Hawk".getBytes(UTF_8))
     val payloadRequestContext = RequestContext(method, host, port, path, authHeader, Some(payload))
 
     "can be hashed as SHA-256" >> {
@@ -74,6 +74,8 @@ final class MaccerSpec extends Specification with ScalaCheck with SpecHelper {
       val mac = Maccer.requestMac(credentials, payloadRequestContext, PayloadValidationMethod)
       mac must beXorRight(MacOps.mac(credentials, normalisedRequest(credentials, payload).getBytes(UTF_8)))
     }
+
+    // TODO TJA Short circuit the validation by passing an invalid hash.
   }
 
   def normalisedRequest(credentials: Credentials, payload: PayloadContext): String = {
