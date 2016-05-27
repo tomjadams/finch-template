@@ -1,5 +1,6 @@
 package finchtemplate.util.http
 
+import java.nio.charset.StandardCharsets._
 import java.util.concurrent.TimeUnit
 
 import com.twitter.finagle.http.Cookie
@@ -28,7 +29,7 @@ trait HttpOps {
   }
 
   def formEncode(content: (String, Any)*): Buf =
-    Owned(content.map(kv => s"${kv._1}=${kv._2.toString}").mkString("&").getBytes("UTF-8"))
+    Owned(content.map(kv => s"${kv._1}=${kv._2.toString}").mkString("&").getBytes(UTF_8))
 }
 
 object HttpOps extends HttpOps
