@@ -10,14 +10,16 @@ libraryDependencies ++= Seq(
   "com.twitter" %% "twitter-server" % "1.20.0",
   "com.netaporter" %% "scala-uri" % "0.4.14",
 
-  //  "io.circe" %% "circe-core" % "0.4.1",
-  "io.circe" %% "circe-generic" % "0.4.1",
-  //  "io.circe" %% "circe-parser" % "0.4.1",
+  // Note. We use the latest 0.5.0 version of Circe as it pulls in the Cats 0.6.0 which Mouse depends on.
+  "io.circe" %% "circe-generic" % "0.5.0-SNAPSHOT" changing(),
+  //"io.circe" %% "circe-core" % "0.4.1",
+  //"io.circe" %% "circe-generic" % "0.4.1",
+  //"io.circe" %% "circe-parser" % "0.4.1",
 
   // Utilities
   "joda-time" % "joda-time" % "2.9.3",
   "org.joda" % "joda-convert" % "1.8",
-  //"com.github.benhutchison" %% "mouse" % "0.2" excludeAll ExclusionRule(organization = "org.typelevel", artifact = "cats"),
+  "com.github.benhutchison" %% "mouse" % "0.2",
 
   // Logging
   "ch.qos.logback" % "logback-core" % "1.1.7",
