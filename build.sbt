@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
   // Utilities
   "joda-time" % "joda-time" % "2.9.3",
   "org.joda" % "joda-convert" % "1.8",
-  "com.github.benhutchison" %% "mouse" % "0.2",
+  //"com.github.benhutchison" %% "mouse" % "0.2" excludeAll ExclusionRule(organization = "org.typelevel", artifact = "cats"),
 
   // Logging
   "ch.qos.logback" % "logback-core" % "1.1.7",
@@ -40,9 +40,9 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 
 scalacOptions ++= Seq("-Xlint", "-unchecked", "-deprecation")
 
-//fork in test := true
-
 scalacOptions in Test ++= Seq("-Yrangepos")
+
+//fork in test := true
 
 //parallelExecution in Test := false
 

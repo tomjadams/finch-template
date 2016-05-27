@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets._
 
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.params.RequestContext
+import finchtemplate.util.hawk.utils.MacOps
 
 object Maccer extends MacOps {
   def requestMac(key: Credentials, context: RequestContext, method: ValidationMethod): MAC = {

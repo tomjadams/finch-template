@@ -34,7 +34,7 @@ Here's some further reading on how this hangs together, and how to do more/exten
 * Authentication
   * Server-Authorization header on responses.
 * Metrics - http://rodrigolazoti.com.br/2015/01/08/send-finagle-stats-to-codahale-metrics-library
-* Client calls to Google search
+* Client calls to: https://developer.github.com/v3/
 * Syslog logging
 * Zipkin
 

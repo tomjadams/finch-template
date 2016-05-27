@@ -62,5 +62,5 @@ final class AuthorisationHeaderParserSpec extends Specification with ScalaCheck 
 
   private def header(keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: PayloadHash, extendedData: ExtendedData, mac: MAC): RawAuthenticationHeader =
     UTTF.RawAuthenticationHeader(
-      s"""Hawk id="$keyId", ts="$timestamp", nonce="$nonce", hash="$payloadHash", ext="$extendedData", mac="$mac"""")
+      s"""Hawk id="$keyId", ts="$timestamp", nonce="$nonce", hash="$payloadHash", ext="$extendedData", mac="${mac.encoded}"""")
 }
