@@ -26,7 +26,7 @@ final class NormalisedRequestSpec extends Specification with ScalaCheck with Spe
   val authHeader = new AuthorisationHeader(keyId, millis, nonce, payloadHash,
     extendedData, MAC(Base64Encoded("6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=")))
 
-  "Header normalisation without a payload" >> {
+  "Normalised headers without payload" >> {
     val method = Get
     val noPayloadRequestContext = RequestContext(method, host, port, path, authHeader, None)
     val normalisedRequest =
@@ -55,7 +55,7 @@ final class NormalisedRequestSpec extends Specification with ScalaCheck with Spe
     }
   }
 
-  "Header normalisation with a payload" >> {
+  "Normalised headers with payload" >> {
     val method = Get
     val payloadContext = PayloadContext(ContentType("text/plain"), "Thank you for flying Hawk".getBytes(UTF_8))
     val withPayloadRequestContext = RequestContext(method, host, port, path, authHeader, Some(payloadContext))
@@ -85,7 +85,7 @@ final class NormalisedRequestSpec extends Specification with ScalaCheck with Spe
     }
   }
 
-  "Payload normalisation" >> {
+  "Normalised payloads" >> {
     val payload = PayloadContext(ContentType("text/plain"), "Thank you for flying Hawk".getBytes(UTF_8))
 
     "can be hashed as SHA-256" >> {
