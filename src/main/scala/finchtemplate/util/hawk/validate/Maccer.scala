@@ -2,6 +2,7 @@ package finchtemplate.util.hawk.validate
 
 import cats.data.Xor
 import cats.data.Xor._
+import com.github.benhutchison.mouse.all._
 import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.params.{PayloadContext, RequestContext}
@@ -29,24 +30,31 @@ object Maccer {
 
   private def validatePayload(credentials: Credentials, context: RequestContext): Xor[Error, MAC] = {
     context.payload.map { payloadContext =>
-      // TODO TJA Pull the optional hash out of the header, when it's been made optional.
       val payloadHash: Option[PayloadHash] = Some(context.clientAuthHeader.payloadHash)
-      payloadHash match {
-        case Some(clientProvidedHash) => {
-          val macFromClientProvidedHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientProvidedHash))))
-          if (macFromClientProvidedHash == context.clientAuthHeader.mac) {
-            right(completePayloadMac(credentials, context, payloadContext))
-          } else {
-            left(new Error("MAC provided in request does not match the computed MAC (possible invalid payload hash)"))
-          }
-        }
-        case None => right(completePayloadMac(credentials, context, payloadContext))
-      }
-    }.getOrElse(left(new Error("No payload provided for payload validation")))
+
+      payloadHash.flatMap { clientProvidedHash =>
+        val macFromClientProvidedHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientProvidedHash))))
+        (macFromClientProvidedHash != context.clientAuthHeader.mac).option(error("MAC provided in request does not match the computed MAC (possible invalid payload hash)"))
+      }.getOrElse(right(completePayloadMac(credentials, context, payloadContext)))
+
+//      payloadHash match {
+//        case Some(clientProvidedHash) => {
+//          val macFromClientProvidedHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientProvidedHash))))
+//          if (macFromClientProvidedHash == context.clientAuthHeader.mac) {
+//            right(completePayloadMac(credentials, context, payloadContext))
+//          } else {
+//            error("MAC provided in request does not match the computed MAC (possible invalid payload hash)")
+//          }
+//        }
+//        case None => right(completePayloadMac(credentials, context, payloadContext))
+//      }
+    }.getOrElse(error("No payload provided for payload validation"))
   }
 
   private def completePayloadMac(credentials: Credentials, context: RequestContext, payloadContext: PayloadContext): MAC = {
     val computedPayloadMac = normalisedPayloadMac(credentials, payloadContext)
     normalisedHeaderMac(credentials, context, Some(computedPayloadMac))
   }
+
+  private def error(message: String): Xor[Error, MAC] = left(new Error(message))
 }
