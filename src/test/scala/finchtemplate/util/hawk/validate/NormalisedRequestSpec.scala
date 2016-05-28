@@ -34,7 +34,7 @@ final class NormalisedRequestSpec extends Specification with ScalaCheck with Spe
          |${HeaderValidationMethod.identifier}
          |$millis
          |$nonce
-         |${method.headerCanonicalForm}
+         |${method.httpRequestLineMethod}
          |${path.path}
          |${host.host}
          |${port.port}
@@ -64,7 +64,7 @@ final class NormalisedRequestSpec extends Specification with ScalaCheck with Spe
          |${HeaderValidationMethod.identifier}
          |$millis
          |$nonce
-         |${method.headerCanonicalForm}
+         |${method.httpRequestLineMethod}
          |${path.path}
          |${host.host}
          |${port.port}

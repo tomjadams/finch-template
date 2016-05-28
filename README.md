@@ -34,12 +34,12 @@ Here's some further reading on how this hangs together, and how to do more/exten
 
 * Authentication
   * Server-Authorization header on responses.
+* Client calls to: https://developer.github.com/v3/
+* Syslog logging
 * Metrics
   * Bridging Finagle metrics to Dropwizard Metrics - https://github.com/rlazoti/finagle-metrics & http://rodrigolazoti.com.br/2015/01/08/send-finagle-stats-to-codahale-metrics-library
   * Dropwizard metrics in scala - https://github.com/erikvanoosten/metrics-scala
   * Keen - https://github.com/keenlabs/KeenClient-Scala/
-* Client calls to: https://developer.github.com/v3/
-* Syslog logging
 * Zipkin
 
 # Customising

@@ -6,7 +6,6 @@ import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.params.{PayloadContext, RequestContext}
 import finchtemplate.util.hawk.validate.NormalisedRequest._
-import finchtemplate.util.log.Logger
 
 object Maccer {
 
@@ -32,28 +31,21 @@ object Maccer {
     context.payload.map { payloadContext =>
       // TODO TJA Pull the optional hash out of the header, when it's been made optional.
       val payloadHash: Option[PayloadHash] = Some(context.clientAuthHeader.payloadHash)
-
       payloadHash match {
-        case Some(clientHash) => {
-          val macWithClientHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientHash))))
-
-          Logger.log.infoS(s"macWithClientHash.encoded: ${macWithClientHash.encoded}")
-          Logger.log.infoS(s"context.clientAuthHeader.payloadHash: ${context.clientAuthHeader.payloadHash}")
-
-          if (macWithClientHash.encoded == context.clientAuthHeader.payloadHash) {
-            right(payloadMac(credentials, context, payloadContext))
+        case Some(clientProvidedHash) => {
+          val macFromClientProvidedHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientProvidedHash))))
+          if (macFromClientProvidedHash == context.clientAuthHeader.mac) {
+            right(completePayloadMac(credentials, context, payloadContext))
           } else {
             left(new Error("MAC provided in request does not match the computed MAC (possible invalid payload hash)"))
           }
         }
-        case None => {
-          right(payloadMac(credentials, context, payloadContext))
-        }
+        case None => right(completePayloadMac(credentials, context, payloadContext))
       }
     }.getOrElse(left(new Error("No payload provided for payload validation")))
   }
 
-  private def payloadMac(credentials: Credentials, context: RequestContext, payloadContext: PayloadContext): MAC = {
+  private def completePayloadMac(credentials: Credentials, context: RequestContext, payloadContext: PayloadContext): MAC = {
     val computedPayloadMac = normalisedPayloadMac(credentials, payloadContext)
     normalisedHeaderMac(credentials, context, Some(computedPayloadMac))
   }

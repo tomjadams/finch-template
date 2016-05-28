@@ -32,8 +32,8 @@ libraryDependencies ++= Seq(
   "org.specs2" %% "specs2-scalacheck" % "3.8.3" % "test",
   "org.specs2" %% "specs2-cats" % "3.8.3" % "test",
   "org.hamcrest" % "hamcrest-core" % "1.3" % "test",
-  "org.mockito" % "mockito-all" % "1.10.19" % "test",
-  "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+  "org.mockito" % "mockito-all" % "1.10.19" % "test"
+//  "org.scalacheck" %% "scalacheck" % "1.13.1" % "test"
 )
 
 resolvers += "Twitter" at "http://maven.twttr.com"

@@ -12,7 +12,7 @@ object NormalisedRequest {
          |${HeaderValidationMethod.identifier}
          |${context.clientAuthHeader.timestamp}
          |${context.clientAuthHeader.nonce}
-         |${context.method.headerCanonicalForm}
+         |${context.method.httpRequestLineMethod}
          |${context.path.path}
          |${context.host.host}
          |${context.port.port}
