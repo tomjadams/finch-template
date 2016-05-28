@@ -29,12 +29,11 @@ object Maccer {
     right(normalisedHeaderMac(credentials, context, None))
 
   private def validatePayload(credentials: Credentials, context: RequestContext): Xor[Error, MAC] = {
-    val payloadHash: Option[PayloadHash] = Some(context.clientAuthHeader.payloadHash)
-    context.payload.map { payloadContext =>
-      payloadHash.flatMap { clientProvidedHash =>
+    context.payload.map { payload =>
+      context.clientAuthHeader.payloadHash.flatMap { clientProvidedHash =>
         val macFromClientProvidedHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientProvidedHash))))
         (macFromClientProvidedHash != context.clientAuthHeader.mac).option(error("MAC provided in request does not match the computed MAC (possible invalid payload hash)"))
-      }.getOrElse(right(completePayloadMac(credentials, context, payloadContext)))
+      }.getOrElse(right(completePayloadMac(credentials, context, payload)))
     }.getOrElse(error("No payload provided for payload validation"))
   }
 

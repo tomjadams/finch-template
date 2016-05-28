@@ -21,11 +21,11 @@ object AuthorisationHeaderParser {
       id <- kvs.get(HeaderKey("id"))
       timestamp <- kvs.get(HeaderKey("ts")).flatMap(parseMillisAsTime).map(_.getMillis)
       nonce <- kvs.get(HeaderKey("nonce"))
-      payloadHash <- kvs.get(HeaderKey("hash"))
       extendedData <- kvs.get(HeaderKey("ext"))
       mac <- kvs.get(HeaderKey("mac"))
     } yield {
-      new AuthorisationHeader(KeyId(id), Millis(timestamp), Nonce(nonce), PayloadHash(payloadHash), ExtendedData(extendedData), MAC(Base64Encoded(mac)))
+      val payloadHash = kvs.get(HeaderKey("hash")).map(PayloadHash)
+      new AuthorisationHeader(KeyId(id), Millis(timestamp), Nonce(nonce), payloadHash, ExtendedData(extendedData), MAC(Base64Encoded(mac)))
     }
   }
 

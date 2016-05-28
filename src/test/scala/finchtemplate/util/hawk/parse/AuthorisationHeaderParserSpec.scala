@@ -21,7 +21,6 @@ final class AuthorisationHeaderParserSpec extends Specification with ScalaCheck 
     """Hawk ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawk id="dh37fgj492je, nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawk id="dh37fgj492je", ts="1353832234", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
-    """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data""""
   )
@@ -50,9 +49,19 @@ final class AuthorisationHeaderParserSpec extends Specification with ScalaCheck 
 
   import Arbitraries._
 
+  val knownGoodHeaders = List(
+    """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw=""""
+  )
+  val genKnownValidHeaders: Gen[RawAuthenticationHeader] = Gen.oneOf(knownGoodHeaders).map(UTTF.RawAuthenticationHeader)
+
   val parseProp = new Properties("Auth header parsing") {
+    property("known valid headers") = forAll(genKnownValidHeaders) { (header: RawAuthenticationHeader) =>
+      val parsed = AuthorisationHeaderParser.parseAuthHeader(header)
+      parsed must beSome
+    }
+
     property("generated headers") = forAll {
-      (keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: PayloadHash, extendedData: ExtendedData, mac: MAC) =>
+      (keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: ExtendedData, mac: MAC) =>
         val parsed = AuthorisationHeaderParser.parseAuthHeader(header(keyId, timestamp, nonce, payloadHash, extendedData, mac))
         parsed must beSome(new AuthorisationHeader(keyId, timestamp, nonce, payloadHash, extendedData, mac))
     }
@@ -60,7 +69,11 @@ final class AuthorisationHeaderParserSpec extends Specification with ScalaCheck 
 
   s2"Parsing authentication header$parseProp"
 
-  private def header(keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: PayloadHash, extendedData: ExtendedData, mac: MAC): RawAuthenticationHeader =
-    UTTF.RawAuthenticationHeader(
-      s"""Hawk id="$keyId", ts="$timestamp", nonce="$nonce", hash="$payloadHash", ext="$extendedData", mac="${mac.encoded}"""")
+  private def header(keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: ExtendedData, mac: MAC): RawAuthenticationHeader = {
+    val s = payloadHash match {
+      case Some(hash) => s"""Hawk id="$keyId", ts="$timestamp", nonce="$nonce", hash="$hash", ext="$extendedData", mac="${mac.encoded}""""
+      case None => s"""Hawk id="$keyId", ts="$timestamp", nonce="$nonce", ext="$extendedData", mac="${mac.encoded}""""
+    }
+    UTTF.RawAuthenticationHeader(s)
+  }
 }
