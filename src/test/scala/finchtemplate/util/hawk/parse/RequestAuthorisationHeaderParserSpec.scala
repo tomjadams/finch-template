@@ -2,7 +2,7 @@ package finchtemplate.util.hawk.parse
 
 import finchtemplate.spec.SpecHelper
 import finchtemplate.util.hawk.TaggedTypesFunctions.{ExtendedData => _, Nonce => _, PayloadHash => _, RawAuthenticationHeader => _}
-import finchtemplate.util.hawk.validate.{AuthorisationHeader, MAC}
+import finchtemplate.util.hawk.validate.{RequestAuthorisationHeader, MAC}
 import finchtemplate.util.hawk.{TaggedTypesFunctions => UTTF, _}
 import finchtemplate.util.time._
 import org.scalacheck.Prop._
@@ -10,7 +10,7 @@ import org.scalacheck.{Arbitrary, Gen, Properties}
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class AuthorisationHeaderParserSpec extends Specification with ScalaCheck with SpecHelper {
+final class RequestAuthorisationHeaderParserSpec extends Specification with ScalaCheck with SpecHelper {
   val noHawkId = List(
     """Hawke id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawkid="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
@@ -36,11 +36,11 @@ final class AuthorisationHeaderParserSpec extends Specification with ScalaCheck 
 
   val invalidHeadersProp = new Properties("Invalid/unsupported header parsing") {
     property("known invalid headers") = forAll(genKnownInvalidHeaders) { (header: RawAuthenticationHeader) =>
-      val parsed = AuthorisationHeaderParser.parseAuthHeader(header)
+      val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header)
       parsed must beNone
     }
     property("random invalid headers") = forAll(genRandomStrings) { (header: RawAuthenticationHeader) =>
-      val parsed = AuthorisationHeaderParser.parseAuthHeader(header)
+      val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header)
       parsed must beNone
     }
   }
@@ -56,14 +56,14 @@ final class AuthorisationHeaderParserSpec extends Specification with ScalaCheck 
 
   val parseProp = new Properties("Auth header parsing") {
     property("known valid headers") = forAll(genKnownValidHeaders) { (header: RawAuthenticationHeader) =>
-      val parsed = AuthorisationHeaderParser.parseAuthHeader(header)
+      val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header)
       parsed must beSome
     }
 
     property("generated headers") = forAll {
       (keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: ExtendedData, mac: MAC) =>
-        val parsed = AuthorisationHeaderParser.parseAuthHeader(header(keyId, timestamp, nonce, payloadHash, extendedData, mac))
-        parsed must beSome(new AuthorisationHeader(keyId, timestamp, nonce, payloadHash, extendedData, mac))
+        val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header(keyId, timestamp, nonce, payloadHash, extendedData, mac))
+        parsed must beSome(new RequestAuthorisationHeader(keyId, timestamp, nonce, payloadHash, extendedData, mac))
     }
   }
 

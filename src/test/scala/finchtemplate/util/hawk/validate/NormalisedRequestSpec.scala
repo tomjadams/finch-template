@@ -23,7 +23,7 @@ final class NormalisedRequestSpec extends Specification with ScalaCheck with Spe
   val nonce = Nonce("j4h3g2")
   val extendedData = ExtendedData("some-app-ext-data")
   val payloadHash = PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")
-  val authHeader = new AuthorisationHeader(keyId, millis, nonce, Some(payloadHash),
+  val authHeader = new RequestAuthorisationHeader(keyId, millis, nonce, Some(payloadHash),
     extendedData, MAC(Base64Encoded("6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=")))
 
   "Normalised headers without payload" >> {

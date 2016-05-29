@@ -1,5 +1,7 @@
 package finchtemplate.util
 
+import cats.data.Xor
+import cats.data.Xor._
 import shapeless.tag.@@
 
 package object hawk {
@@ -17,4 +19,8 @@ package object hawk {
   val MustAuthenticateHttpHeader = "WWW-Authenticate"
   val AuthorisationHttpHeader = "Authorization"
   val HawkHeaderValuePrefix = "Hawk"
+
+  def errorXor[T](message: String): Xor[Error, T] = left(error(message))
+
+  def error(message: String): Error = new Error(message)
 }

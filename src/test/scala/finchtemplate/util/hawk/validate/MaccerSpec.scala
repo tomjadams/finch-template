@@ -25,7 +25,7 @@ final class MaccerSpec extends Specification with ScalaCheck with SpecHelper {
 
   "Header validation" >> {
     val method = Get
-    val authHeader = new AuthorisationHeader(keyId, millis, nonce, Some(PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")),
+    val authHeader = new RequestAuthorisationHeader(keyId, millis, nonce, Some(PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")),
       extendedData, MAC(Base64Encoded("6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=")))
     val noPayloadRequestContext = RequestContext(method, host, port, path, authHeader, None)
     val normalisedRequest =
@@ -64,7 +64,7 @@ final class MaccerSpec extends Specification with ScalaCheck with SpecHelper {
     val payload = PayloadContext(ContentType("text/plain"), "Thank you for flying Hawk".getBytes(UTF_8))
 
     "can be hashed" >> {
-      val authHeader = new AuthorisationHeader(keyId, millis, nonce, Some(PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")),
+      val authHeader = new RequestAuthorisationHeader(keyId, millis, nonce, Some(PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")),
         extendedData, MAC(Base64Encoded("aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw=")))
       val requestContext = RequestContext(Post, host, port, path, authHeader, Some(payload))
       val credentials = Credentials(keyId, key, Sha256)
@@ -73,7 +73,7 @@ final class MaccerSpec extends Specification with ScalaCheck with SpecHelper {
     }
 
     "failure is short circuited if an invalid hash is provided by the client" >> {
-      val authHeader = new AuthorisationHeader(keyId, millis, nonce, Some(PayloadHash("INVALID HASH")),
+      val authHeader = new RequestAuthorisationHeader(keyId, millis, nonce, Some(PayloadHash("INVALID HASH")),
         extendedData, MAC(Base64Encoded("6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=")))
       val requestContext = RequestContext(Post, host, port, path, authHeader, Some(payload))
       val credentials = Credentials(keyId, key, Sha256)
