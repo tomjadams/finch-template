@@ -21,7 +21,7 @@ final class TimeValidationSpec extends Specification with SpecHelper {
     }
     property("valid timestamps") = forAll { (ts: Millis) =>
       val delta = timeDeltaWithNow(ts)
-      (delta >= 0L && delta <= acceptableTimeDelta.getMillis) ==> (validate(credentials, context(ts), HeaderValidationMethod) must beXorRight
+      (delta >= 0L && delta <= acceptableTimeDelta.getMillis) ==> (validate(credentials, context(ts), HeaderValidationMethod) must beXorRight)
     }
   }
 
