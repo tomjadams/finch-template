@@ -14,9 +14,13 @@ trait TimeOps {
 
   def parseMillisAsTime(millis: String): Option[DateTime] = millis.parseLongOption.map(l => new DateTime(l))
 
-  def toIso8601(millis: Millis): String = toIso8601(new DateTime(millis, UTC))
+  def toIso8601(millis: Millis): String = toIso8601(utcTime(millis))
 
   def toIso8601(time: DateTime): String = iso8601Formatter.print(time)
+
+  def utcTime(millis: Millis): DateTime = new DateTime(millis, UTC)
+
+  def nowUtc: DateTime = DateTime.now(UTC)
 }
 
 object TimeOps extends TimeOps

@@ -8,7 +8,7 @@ import org.joda.time.Duration
 trait TimeValid
 
 object TimeValidation extends Validator[TimeValid] {
-  val acceptableTimeDelta = Duration.standardMinutes(1)
+  val acceptableTimeDelta = Duration.standardMinutes(2)
 
   override def validate(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[Error, TimeValid] = {
     errorXor("not implemented")
