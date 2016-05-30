@@ -8,7 +8,7 @@ import org.scalacheck.Properties
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class HelloResponseEncodersSpec extends Specification with ScalaCheck with SpecHelper {
+final class HelloResponseEncodersSpec extends Specification with SpecHelper {
 
   val encodeProp = new Properties("Hello encoding") {
     property("encode") = forAll { (h: Hello) =>

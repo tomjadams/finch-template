@@ -3,10 +3,9 @@ package finchtemplate.util.hawk.validate
 import java.nio.charset.StandardCharsets._
 
 import finchtemplate.spec.SpecHelper
-import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class Base64OpsSpec extends Specification with ScalaCheck with SpecHelper {
+final class Base64OpsSpec extends Specification with SpecHelper {
   "Arrays of bytes" >> {
     "can be encoded into base64" >> {
       Base64Ops.base64Encode("".getBytes(UTF_8)) must beEqualTo("")

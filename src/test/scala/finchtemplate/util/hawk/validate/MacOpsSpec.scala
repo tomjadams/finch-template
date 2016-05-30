@@ -8,7 +8,7 @@ import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
 // Note. Test data generated with http://hash.online-convert.com/sha256-generator
-final class MacOpsSpec extends Specification with ScalaCheck with SpecHelper {
+final class MacOpsSpec extends Specification with SpecHelper {
   "Arrays of bytes" >> {
     "can have a SHA-256 MAC created" >> {
       val creds = Credentials(KeyId("fred"), Key("d0lph1n54r3c001"), Sha256)

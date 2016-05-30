@@ -11,7 +11,7 @@ import finchtemplate.util.time.TaggedTypesFunctions.Millis
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class NormalisedRequestSpec extends Specification with ScalaCheck with SpecHelper {
+final class NormalisedRequestSpec extends Specification with SpecHelper {
   val keyId = KeyId("dh37fgj492je")
   val key = Key("werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn")
 

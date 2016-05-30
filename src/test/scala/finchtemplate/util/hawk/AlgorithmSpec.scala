@@ -7,7 +7,7 @@ import org.scalacheck.Properties
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class AlgorithmSpec extends Specification with ScalaCheck with SpecHelper {
+final class AlgorithmSpec extends Specification with SpecHelper {
 
   "Hawk algorithms" >> {
     "SHA 256" >> {

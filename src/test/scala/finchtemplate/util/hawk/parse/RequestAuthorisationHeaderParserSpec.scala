@@ -2,15 +2,14 @@ package finchtemplate.util.hawk.parse
 
 import finchtemplate.spec.SpecHelper
 import finchtemplate.util.hawk.TaggedTypesFunctions.{ExtendedData => _, Nonce => _, PayloadHash => _, RawAuthenticationHeader => _}
-import finchtemplate.util.hawk.validate.{RequestAuthorisationHeader, MAC}
+import finchtemplate.util.hawk.validate.{MAC, RequestAuthorisationHeader}
 import finchtemplate.util.hawk.{TaggedTypesFunctions => UTTF, _}
 import finchtemplate.util.time._
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Gen, Properties}
-import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class RequestAuthorisationHeaderParserSpec extends Specification with ScalaCheck with SpecHelper {
+final class RequestAuthorisationHeaderParserSpec extends Specification with SpecHelper {
   val noHawkId = List(
     """Hawke id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawkid="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",

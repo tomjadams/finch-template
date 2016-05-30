@@ -8,7 +8,7 @@ import org.scalacheck.{Arbitrary, Gen, Properties}
 import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class HeaderKeyValueParserSpec extends Specification with ScalaCheck with SpecHelper {
+final class HeaderKeyValueParserSpec extends Specification with SpecHelper {
   val invalidkeyValues = List(
     """a=b""",
     """a=1""",

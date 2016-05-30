@@ -5,10 +5,9 @@ import finchtemplate.util.error.ErrorResponseEncoders._
 import io.circe.syntax._
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Properties
-import org.specs2.ScalaCheck
 import org.specs2.mutable.Specification
 
-final class ErrorResponseEncodersSpec extends Specification with ScalaCheck with SpecHelper {
+final class ErrorResponseEncodersSpec extends Specification with SpecHelper {
 
   val encodeProp = new Properties("Hello encoding") {
     property("without exception cause") = forAll(genExceptionNoCause) { (e: java.lang.Exception) =>
