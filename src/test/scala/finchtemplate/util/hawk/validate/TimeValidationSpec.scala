@@ -4,9 +4,9 @@ import finchtemplate.spec.SpecHelper
 import finchtemplate.util.hawk.HeaderValidationMethod
 import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk.params._
-import finchtemplate.util.hawk.validate.TimeValidation.acceptableTimeDelta
+import finchtemplate.util.hawk.validate.TimeValidation.{acceptableTimeDelta, validate}
+import finchtemplate.util.time.TaggedTypesFunctions.Millis
 import finchtemplate.util.time.{Millis, TimeOps}
-import org.joda.time.Seconds._
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Properties
 import org.specs2.mutable.Specification
@@ -16,20 +16,19 @@ final class TimeValidationSpec extends Specification with SpecHelper {
 
   val timestamps = new Properties("Timestamps") {
     property("invalid timestamps") = forAll { (ts: Millis) =>
-
-      val delta = timeDelta(ts)
-      val valid = TimeValidation.validate(credentials, context(ts), HeaderValidationMethod)
-
-      (delta >= 0L && delta <= acceptableTimeDelta.getStandardSeconds) ==> ("" must beEqualTo(""))
-
+      val delta = timeDeltaWithNow(ts)
+      (delta > acceptableTimeDelta.getMillis) ==> (validate(credentials, context(ts), HeaderValidationMethod) must beXorLeft)
+    }
+    property("valid timestamps") = forAll { (ts: Millis) =>
+      val delta = timeDeltaWithNow(ts)
+      (delta >= 0L && delta <= acceptableTimeDelta.getMillis) ==> (validate(credentials, context(ts), HeaderValidationMethod) must beXorRight
     }
   }
 
   s2"Validating timestamps$timestamps"
 
-  private def timeDelta(ts: Millis): Int = {
-    math.abs(secondsBetween(TimeOps.nowUtc, TimeOps.utcTime(ts)).getSeconds)
-  }
+  private def timeDeltaWithNow(ts: Millis): Millis =
+    Millis(math.abs(TimeOps.nowUtc.getMillis - TimeOps.utcTime(ts).getMillis))
 
   private def context(ts: Millis): RequestContext = {
     val header = RequestAuthorisationHeader(KeyId("fred"), ts, Nonce("nonce"), None, ExtendedData("data"), MAC(Base64Encoded("base64")))
