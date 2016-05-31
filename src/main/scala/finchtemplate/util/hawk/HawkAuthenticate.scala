@@ -39,3 +39,6 @@ object HawkAuthenticate {
     */
   def authenticateResponse(credentials: Credentials, payload: Option[PayloadContext]): ServerAuthorisationHeader = ???
 }
+
+// https://github.com/finagle/finch/blob/master/docs/cookbook.md#converting-errorrequesterrors-into-json
+// https://twitter.github.io/scala_school/finagle.html
