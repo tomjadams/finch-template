@@ -15,13 +15,13 @@ final class TimeValidationSpec extends Specification with SpecHelper {
   val credentials = Credentials(KeyId("fred"), Key("d0p1h1n5"), Sha256)
 
   val timestamps = new Properties("Timestamps") {
-    property("invalid timestamps") = forAll { (ts: Millis) =>
+    property("are valid if within the interval") = forAll { (ts: Millis) =>
       val delta = timeDeltaWithNow(ts)
-      (delta > acceptableTimeDelta.getMillis) ==> (validate(credentials, context(ts), HeaderValidationMethod) must beXorLeft)
-    }
-    property("valid timestamps") = forAll { (ts: Millis) =>
-      val delta = timeDeltaWithNow(ts)
-      (delta >= 0L && delta <= acceptableTimeDelta.getMillis) ==> (validate(credentials, context(ts), HeaderValidationMethod) must beXorRight)
+      if (delta > acceptableTimeDelta.getMillis) {
+        validate(credentials, context(ts), HeaderValidationMethod) must beXorLeft
+      } else {
+        validate(credentials, context(ts), HeaderValidationMethod) must beXorRight
+      }
     }
   }
 
