@@ -42,3 +42,4 @@ object HawkAuthenticate {
 
 // https://github.com/finagle/finch/blob/master/docs/cookbook.md#converting-errorrequesterrors-into-json
 // https://twitter.github.io/scala_school/finagle.html
+// https://blog.twitter.com/2014/netty-at-twitter-with-finagle, "Composing Services" section
