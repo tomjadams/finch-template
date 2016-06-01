@@ -1,14 +1,16 @@
 package finchtemplate.auth
 
+import java.net.URI
+
 import cats.data.Xor
 import com.twitter.finagle.http.{Method, Request, Response}
 import com.twitter.finagle.{Filter, Service}
-import com.twitter.util.Future
+import com.twitter.util.{Future, Try}
 import finchtemplate.util.hawk.HawkAuthenticate.parseRawRequestAuthHeader
 import finchtemplate.util.hawk.TaggedTypesFunctions.RawAuthenticationHeader
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.params.HttpMethod.httpMethod
-import finchtemplate.util.hawk.params.RequestContext
+import finchtemplate.util.hawk.params._
 import finchtemplate.util.hawk.validate.{Credentials, RequestAuthorisationHeader}
 
 final class AuthenticationFilter(credentials: Credentials) extends Filter[Request, Response, Request, Response] {
@@ -21,12 +23,16 @@ final class AuthenticationFilter(credentials: Credentials) extends Filter[Reques
   }
 
   private def authenticateRequest(request: Request): Xor[Error, RequestValid] = {
+    val method = httpMethod(request.method.toString()).getOrElse(Get)
+
+    Try(new URI(request.uri)).map((uri: URI) => ???)
+
+    val host = Host(request.host.getOrElse(""))
+    val port = Port(request.remotePort)
+    val path = UriPath(request.path)
     val header = parseAuthHeader(request)
-    val host = Host()
-    val port = Port()
-    val path = UriPath()
-    val payload = Some()
-    val rc = new RequestContext(httpMethod(request.method.toString()), host, port, path, header, payload)
+    val payload = Some(PayloadContext())
+    val rc = new RequestContext(method, host, port, path, header, payload)
     HawkAuthenticate.authenticateRequest(credentials, rc)
   }
 
