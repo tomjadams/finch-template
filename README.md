@@ -41,6 +41,8 @@ Here's some further reading on how this hangs together, and how to do more/exten
   * Dropwizard metrics in scala - https://github.com/erikvanoosten/metrics-scala
   * Keen - https://github.com/keenlabs/KeenClient-Scala/
 * Zipkin
+* Fetch? http://www.47deg.com/blog/fetch-scala-library
+* Or, Clump? http://getclump.io
 
 # Customising
 
