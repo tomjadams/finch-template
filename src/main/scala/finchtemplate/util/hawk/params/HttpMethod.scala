@@ -1,7 +1,7 @@
 package finchtemplate.util.hawk.params
 
 object HttpMethod {
-  def httpMethod(method: String): Option[HttpMethod] = {
+  def httpMethod(method: String): Option[HttpMethod] = method.toUpperCase match {
     case Options.httpRequestLineMethod => Some(Options)
     case Connect.httpRequestLineMethod => Some(Connect)
     case Head.httpRequestLineMethod => Some(Head)
