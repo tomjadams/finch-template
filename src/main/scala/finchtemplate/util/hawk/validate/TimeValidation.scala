@@ -1,7 +1,7 @@
 package finchtemplate.util.hawk.validate
 
 import cats.data.Xor
-import cats.data.Xor._
+import com.github.benhutchison.mouse.all._
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.params.RequestContext
 import finchtemplate.util.time.TaggedTypesFunctions._
@@ -15,11 +15,7 @@ object TimeValidation extends Validator[TimeValid] {
 
   override def validate(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[Error, TimeValid] = {
     val delta = Millis(math.abs(TimeOps.nowUtc.getMillis - clientTs(context).getMillis))
-    if (delta <= acceptableTimeDelta.getMillis) {
-      right(new TimeValid {})
-    } else {
-      errorXor("Timestamp invalid")
-    }
+    (delta <= acceptableTimeDelta.getMillis).xor(error("Timestamp invalid"), new TimeValid {})
   }
 
   private def clientTs(context: RequestContext): DateTime = TimeOps.utcTime(context.clientAuthHeader.timestamp)
