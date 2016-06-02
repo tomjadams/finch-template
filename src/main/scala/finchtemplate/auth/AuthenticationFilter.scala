@@ -28,8 +28,12 @@ final class AuthenticationFilter(credentials: Credentials) extends Filter[Reques
       host = request.host.map(Host(_)).getOrElse(Host.UnknownHost)
       port = Port(requestUri.getPort)
       path = UriPath(requestUri.getRawPath)
-      rc <- new RequestContext(method, host, port, path, header, methodDependantPayloadContext(method, request.contentType, request.content))
-    } yield HawkAuthenticate.authenticateRequest(credentials, rc)
+
+    } yield {
+      val pc = methodDependantPayloadContext(method, request.contentType, request.content)
+      val rc = new RequestContext(method, host, port, path, header, pc)
+      HawkAuthenticate.authenticateRequest(credentials, rc)
+    }
 
   }
 
