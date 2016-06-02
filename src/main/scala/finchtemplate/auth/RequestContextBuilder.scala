@@ -14,7 +14,6 @@ import finchtemplate.util.hawk.params._
 import finchtemplate.util.hawk.validate.RequestAuthorisationHeader
 
 object RequestContextBuilder {
-  // TODO TJA THis should return Xor[Error, RequestContext] so we get the error out
   def buildContext(request: Request): Option[RequestContext] =
     for {
       header <- parseAuthHeader(request)
