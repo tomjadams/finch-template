@@ -9,16 +9,16 @@ import finchtemplate.util.hawk.params.{PayloadContext, RequestContext}
 import finchtemplate.util.hawk.validate.NormalisedRequest._
 
 object Maccer {
-  def requestMac(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[Error, MAC] =
+  def requestMac(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[HawkError, MAC] =
     method match {
       case HeaderValidationMethod => validateHeader(credentials, context)
       case PayloadValidationMethod => validatePayload(credentials, context)
     }
 
-  private def validateHeader(credentials: Credentials, context: RequestContext): Xor[Error, MAC] =
+  private def validateHeader(credentials: Credentials, context: RequestContext): Xor[HawkError, MAC] =
     right(normalisedHeaderMac(credentials, context, None))
 
-  private def validatePayload(credentials: Credentials, context: RequestContext): Xor[Error, MAC] = {
+  private def validatePayload(credentials: Credentials, context: RequestContext): Xor[HawkError, MAC] = {
     context.payload.map { payload =>
       context.clientAuthHeader.payloadHash.flatMap { clientProvidedHash =>
         val macFromClientProvidedHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientProvidedHash))))

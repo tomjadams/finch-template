@@ -20,7 +20,7 @@ package object hawk {
   val AuthorisationHttpHeader = "Authorization"
   val HawkHeaderValuePrefix = "Hawk"
 
-  def errorXor[T](message: String): Xor[Error, T] = left(error(message))
+  def errorXor[T](message: String): Xor[HawkError, T] = left(error(message))
 
-  def error(message: String): Error = new Error(message)
+  def error(message: String): HawkError = new HawkError(message)
 }

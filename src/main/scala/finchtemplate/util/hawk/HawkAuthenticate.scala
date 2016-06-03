@@ -31,7 +31,7 @@ object HawkAuthenticate {
   /**
     * Authenticate an incoming request using Hawk.
     **/
-  def authenticateRequest(credentials: Credentials, context: RequestContext, method: ValidationMethod = PayloadValidationMethod): Xor[Error, RequestValid] =
+  def authenticateRequest(credentials: Credentials, context: RequestContext, method: ValidationMethod = PayloadValidationMethod): Xor[HawkError, RequestValid] =
     validateTime(credentials, context, method).map(_ => validateMac(credentials, context, method)).map(_ => new RequestValid {})
 
   /**
@@ -39,7 +39,3 @@ object HawkAuthenticate {
     */
   def authenticateResponse(credentials: Credentials, payload: Option[PayloadContext]): ServerAuthorisationHeader = ???
 }
-
-// https://github.com/finagle/finch/blob/master/docs/cookbook.md#converting-errorrequesterrors-into-json
-// https://twitter.github.io/scala_school/finagle.html
-// https://blog.twitter.com/2014/netty-at-twitter-with-finagle, "Composing Services" section

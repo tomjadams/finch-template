@@ -13,7 +13,7 @@ trait TimeValid
 object TimeValidation extends Validator[TimeValid] {
   val acceptableTimeDelta = Duration.standardMinutes(2)
 
-  override def validate(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[Error, TimeValid] = {
+  override def validate(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[HawkError, TimeValid] = {
     val delta = Millis(math.abs(TimeOps.nowUtc.getMillis - clientTs(context).getMillis))
     (delta <= acceptableTimeDelta.getMillis).xor(error("Timestamp invalid"), new TimeValid {})
   }
