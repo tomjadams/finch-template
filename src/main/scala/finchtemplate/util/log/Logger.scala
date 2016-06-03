@@ -12,15 +12,23 @@ object Logger extends Logging
 final class Logger(name: String) {
   lazy val log = LoggerFactory.getLogger(name)
 
-  def infoS(s: String) {
+  def info(s: String) {
     log.info(s)
+  }
+
+  def warn(s: String) {
+    log.warn(s)
+  }
+
+  def warnST(s: String, t: Throwable) {
+    log.warn(s, t)
+  }
+
+  def error(s: String) {
+    log.error(s)
   }
 
   def errorST(s: String, t: Throwable) {
     log.error(s, t)
-  }
-
-  def errorS(s: String) {
-    log.error(s)
   }
 }

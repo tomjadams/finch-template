@@ -22,7 +22,7 @@ abstract class RequestLoggingFilter[R <: Request](val log: Logger, val formatter
   override protected def logException(duration: Duration, request: R, throwable: Throwable) {
     val response = Response(request.version, Status.InternalServerError)
     val line = formatter.format(request, response, duration)
-    log.infoS(line)
+    log.info(line)
   }
 }
 

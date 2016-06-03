@@ -26,7 +26,7 @@ trait LoggingFilter[REQ, REP] extends SimpleFilter[REQ, REP] {
 
   protected def log(replyTime: Duration, request: REQ, reply: REP) {
     val line = formatter.format(request, reply, replyTime)
-    log.infoS(line)
+    log.info(line)
   }
 
   protected def logException(replyTime: Duration, request: REQ, throwable: Throwable) {

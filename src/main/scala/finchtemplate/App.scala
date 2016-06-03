@@ -15,7 +15,7 @@ final class App {
     .serve(Config.listenAddress, FinchTemplateApi.apiService)
 
   def boot(): Unit = {
-    log.infoS(s"Booting in ${env.name} mode on ${server.boundAddress}")
+    log.info(s"Booting in ${env.name} mode on ${server.boundAddress}")
     registerStats()
     sys.addShutdownHook(shutdown())
     Await.ready(server)
@@ -27,7 +27,7 @@ final class App {
   }
 
   private def shutdown(): Unit = {
-    log.infoS("Shutting down...")
+    log.info("Shutting down...")
     Await.ready(server.close())
   }
 }

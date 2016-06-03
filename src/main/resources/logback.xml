@@ -12,5 +12,6 @@
     <logger name="com.zaxxer.hikari" level="INFO"/>
     <logger name="com.zaxxer.hikari.pool.PoolBase" level="WARN"/>
     <logger name="access" level="INFO"/>
+    <logger name="error" level="INFO"/>
     <logger name="finch-template" level="INFO"/>
 </configuration>
