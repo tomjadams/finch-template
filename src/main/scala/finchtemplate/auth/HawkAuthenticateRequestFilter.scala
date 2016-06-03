@@ -17,7 +17,7 @@ abstract class HawkAuthenticateRequestFilter(credentials: Credentials) extends F
 
   private def authenticate(request: Request): Xor[FinchTemplateError, RequestValid] = {
     val valid = buildContext(request).map(context => authenticateRequest(credentials, context)).getOrElse(errorXor(s"Missing authentication header '$AuthorisationHttpHeader'"))
-    valid.leftMap((error: HawkError) => new AuthenticationFailedError("Request is not authorised", Some(error)))
+    valid.leftMap(e => new AuthenticationFailedError("Request is not authorised", Some(e)))
   }
 
   def notAuthorised[T](message: String): Xor[FinchTemplateError, T] = left(new AuthenticationFailedError(message))
