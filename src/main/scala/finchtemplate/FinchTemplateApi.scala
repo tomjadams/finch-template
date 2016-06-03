@@ -5,8 +5,8 @@ import com.twitter.finagle.http.{Request, Response}
 import finchtemplate.api.v1.ErrorHandler.errorHandler
 import finchtemplate.api.v1.ResponseEncoders
 import finchtemplate.api.v1.hello.HelloApi._
-import finchtemplate.auth.HawkAuthenticateRequestFilter
 import finchtemplate.config.Config.httpAuthCredentials
+import finchtemplate.http.HawkAuthenticateRequestFilter
 import finchtemplate.util.log.filter.RequestLoggingFilter
 
 object AuthenticationFilter extends HawkAuthenticateRequestFilter(httpAuthCredentials)

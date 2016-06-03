@@ -1,4 +1,4 @@
-package finchtemplate.auth
+package finchtemplate.http
 
 import java.net.URI
 
