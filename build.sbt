@@ -26,6 +26,9 @@ libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.1.7",
   "org.slf4j" % "slf4j-api" % "1.7.21",
 
+  // Monitoring
+  "com.rollbar" % "rollbar" % "0.5.2",
+
   // Testing
   "org.specs2" %% "specs2-core" % "3.8.3" % "test",
   "org.specs2" %% "specs2-mock" % "3.8.3" % "test",

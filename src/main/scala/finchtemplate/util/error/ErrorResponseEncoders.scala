@@ -7,7 +7,7 @@ import io.circe.syntax._
 import io.finch.EncodeResponse
 
 trait ErrorResponseEncoders {
-  implicit val exceptionEncoder = Encoder.instance[Exception] { e =>
+  implicit val exceptionEncoder = Encoder.instance[Throwable] { e =>
     val base = Map(
       "message" -> e.getMessage,
       "type" -> e.getClass.getSimpleName
@@ -16,7 +16,7 @@ trait ErrorResponseEncoders {
     withCause.asJson
   }
 
-  implicit def exceptionResponseEncoder: EncodeResponse[Exception] =
+  implicit def exceptionResponseEncoder: EncodeResponse[Throwable] =
     EncodeResponse(HttpOps.jsonMimeType)(e => Utf8(Map("error" -> exceptionEncoder.apply(e)).asJson.noSpaces))
 }
 

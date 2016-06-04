@@ -6,6 +6,7 @@ import com.twitter.server.util.{JvmStats, TwitterStats}
 import com.twitter.util.Await
 import finchtemplate.config.Config
 import finchtemplate.config.Environment.env
+import finchtemplate.util.error.ErrorReporter._
 import finchtemplate.util.log.Logger._
 
 final class App {
@@ -16,12 +17,13 @@ final class App {
 
   def boot(): Unit = {
     log.info(s"Booting in ${env.name} mode on ${server.boundAddress}")
-    registerStats()
+    registerMetricsAndMonitoring()
     sys.addShutdownHook(shutdown())
     Await.ready(server)
   }
 
-  private def registerStats(): Unit = {
+  private def registerMetricsAndMonitoring(): Unit = {
+    errorReporter.registerForUnhandledExceptions()
     JvmStats.register(Config.statsReceiver)
     TwitterStats.register(Config.statsReceiver)
   }

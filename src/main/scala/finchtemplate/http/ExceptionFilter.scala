@@ -1,33 +1,34 @@
 package finchtemplate.http
 
+import com.twitter.finagle.http.Status._
 import com.twitter.finagle.http.{Request, Response, Status}
 import com.twitter.finagle.{CancelledRequestException, Service, SimpleFilter}
 import com.twitter.util.{Future, NonFatal}
+import finchtemplate.util.error.ErrorReporter._
 import finchtemplate.util.log.Logger
+import io.finch.EncodeResponse
 
 // Copied from com.twitter.finagle.http.filter.ExceptionFilter
-class ExceptionFilter[REQUEST <: Request] extends SimpleFilter[REQUEST, Response] {
+class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Exception]) extends SimpleFilter[REQUEST, Response] {
   private val log = new Logger("error")
 
-  // TODO TJA Add in rollbar/etc. exception handling.
-
   def apply(request: REQUEST, service: Service[REQUEST, Response]): Future[Response] = {
-    val serviceResponse = {
+    val finalResponse = {
       try {
         service(request)
       } catch {
         case NonFatal(e) => Future.exception(e)
       }
     }
-    serviceResponse.rescue {
+    finalResponse.rescue {
       case e: CancelledRequestException =>
-        // This only happens when ChannelService cancels a reply.
         log.warn(s"Cancelled request, uri: ${request.uri}")
-        respond(request, Status.ClientClosedRequest)
-      case e: Throwable =>
+        respond(request, ClientClosedRequest, e)
+      case t: Throwable =>
         try {
-          log.warnST(s"Unhandled exception, uri: ${request.uri} exception: $e", e)
-          respond(request, Status.InternalServerError)
+          errorReporter.error(t)
+          log.warnST(s"Unhandled exception, uri: ${request.uri} exception: $t", t)
+          respond(request, InternalServerError, t)
         } catch {
           case e: Throwable => {
             // Logging or internals are broken. Write static string to console - don't attempt to include request or exception.
@@ -38,13 +39,11 @@ class ExceptionFilter[REQUEST <: Request] extends SimpleFilter[REQUEST, Response
     }
   }
 
-  private def respond(request: REQUEST, responseStatus: Status): Future[Response] = {
+  private def respond(request: REQUEST, status: Status, t: Throwable): Future[Response] = {
     val response = request.response
-    response.status = responseStatus
+    response.status = status
     response.clearContent()
     response.contentLength = 0
     Future.value(response)
   }
 }
-
-object ExceptionFilter extends ExceptionFilter[Request]

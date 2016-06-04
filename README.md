@@ -9,11 +9,12 @@ It aims to provide:
 * A HTTP stack, using [Finch](https://github.com/finagle/finch);
 * Authentication support using [Hawk](https://github.com/hueniverse/hawk), a HMAC-style protocol;
 * JSON encoding & decoding, using [Circe](https://github.com/travisbrown/circe);
+* A standard response format, including reasonable error handling;
 * Clients for talking to downstream services using [Featherbed](https://finagle.github.io/featherbed);
 * Centralised logging using syslog;
 * [Metrics](https://twitter.github.io/finagle/guide/Metrics.html) support using ...;
-* Monitoring via NewRelic;
-* Consistent error handling;
+* Monitoring via New Relic;
+* Error reporting to [Rollbar](https://rollbar.com)
 * Tracing with [Zipkin](https://github.com/openzipkin/zipkin);
 * Testing using [specs2](https://etorreborre.github.io/specs2/) & [ScalaCheck](https://www.scalacheck.org);
 * Packaging using [SBT Native Packager](https://github.com/sbt/sbt-native-packager).
@@ -35,20 +36,23 @@ Here's some further reading on how this hangs together, and how to do more/exten
 * Authentication
   * Server-Authorization header on responses.
 * Client calls to: https://developer.github.com/v3/
+* Rollbar
+  * https://github.com/rollbar/rollbar-java/tree/master/rollbar
 * Syslog logging
 * Metrics
   * Bridging Finagle metrics to Dropwizard Metrics - https://github.com/rlazoti/finagle-metrics & http://rodrigolazoti.com.br/2015/01/08/send-finagle-stats-to-codahale-metrics-library
   * Dropwizard metrics in scala - https://github.com/erikvanoosten/metrics-scala
   * Keen - https://github.com/keenlabs/KeenClient-Scala/
 * Zipkin
-* Fetch? http://www.47deg.com/blog/fetch-scala-library
-* Or, Clump? http://getclump.io
 
 # Customising
 
 1. Take a clone.
 
-1. TODO
+1. Customise `Config`:
+
+  1. Put your keys (or a reference to how they're found, e.g. via environment variables) in.
+  1. Modify any of the values you wish, such as the port or system name.
 
 # API
 

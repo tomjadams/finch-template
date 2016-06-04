@@ -1,6 +1,8 @@
 package finchtemplate.config
 
+import finchtemplate.config.Config.rollbarAccessKey
 import finchtemplate.util.config.{ConfigUtils, Environment => Env}
+import finchtemplate.util.error.RollbarErrorReporter
 
 object Environment extends ConfigUtils {
   def env: Env = Config.environment match {
