@@ -30,8 +30,7 @@ final class App {
   }
 
   private def shutdown(): Unit = {
-    log.info("Shutting down...")
-    AsyncOps.shutdownExecutorService()
+    log.info(s"${Config.systemId} is shutting down...")
     Await.ready(server.close())
   }
 }

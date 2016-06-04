@@ -14,13 +14,15 @@ trait AsyncOps {
   lazy val futurePool = FuturePool.interruptible(executorService)
   lazy val globalAsyncExecutionContext: ExecutionContext = scala.concurrent.ExecutionContext.fromExecutor(executorService)
 
+  sys.addShutdownHook(shutdownExecutorService())
+
   def runAsync[T](f: => T): Future[T] = futurePool.apply(f)
 
   def shutdownExecutorService(): Unit = {
     log.info("Shutting down executor service...")
     executorService.shutdown()
     try {
-      executorService.awaitTermination(30L, SECONDS)
+      executorService.awaitTermination(10L, SECONDS)
     } catch {
       case e: InterruptedException => {
         log.warn("Interrupted while waiting for graceful shutdown, forcibly shutting down...")
