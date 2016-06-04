@@ -6,8 +6,8 @@ import com.twitter.util._
 import finchtemplate.util.log.Logger
 
 /**
- * A [[com.twitter.finagle.Filter]] that logs all requests according to a formatter.
- */
+  * A [[com.twitter.finagle.Filter]] that logs all requests according to a formatter.
+  */
 trait LoggingFilter[REQ, REP] extends SimpleFilter[REQ, REP] {
   val log: Logger
   val formatter: FinagleLogFormatter[REQ, REP]
@@ -17,14 +17,14 @@ trait LoggingFilter[REQ, REP] extends SimpleFilter[REQ, REP] {
     val future = service(request)
     future respond {
       case Return(reply) =>
-        log(elapsed(), request, reply)
+        logSuccess(elapsed(), request, reply)
       case Throw(throwable) =>
         logException(elapsed(), request, throwable)
     }
     future
   }
 
-  protected def log(replyTime: Duration, request: REQ, reply: REP) {
+  protected def logSuccess(replyTime: Duration, request: REQ, reply: REP) {
     val line = formatter.format(request, reply, replyTime)
     log.info(line)
   }

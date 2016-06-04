@@ -1,5 +1,6 @@
 package finchtemplate.util.error
 
+import com.twitter.finagle.http.Message._
 import com.twitter.io.Buf._
 import finchtemplate.util.http.HttpOps
 import io.circe.Encoder
@@ -17,7 +18,7 @@ trait ErrorResponseEncoders {
   }
 
   implicit def exceptionResponseEncoder: EncodeResponse[Throwable] =
-    EncodeResponse(HttpOps.jsonMimeType)(e => Utf8(Map("error" -> exceptionEncoder.apply(e)).asJson.noSpaces))
+    EncodeResponse(ContentTypeJson)(e => Utf8(Map("error" -> exceptionEncoder.apply(e)).asJson.noSpaces))
 }
 
 object ErrorResponseEncoders extends ErrorResponseEncoders

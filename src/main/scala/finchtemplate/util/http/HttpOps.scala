@@ -12,7 +12,6 @@ import finchtemplate.config.Environment
 trait HttpOps {
   val defaultCookieDuration = Duration(10 * 365, TimeUnit.DAYS)
   val distantPast = Duration(-10 * 365, TimeUnit.DAYS)
-  val jsonMimeType = "application/json"
 
   def cookie(k: String, v: String): Cookie = cookie(k, v, defaultCookieDuration)
 

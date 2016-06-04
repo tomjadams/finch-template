@@ -48,9 +48,9 @@ class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Throwable]) ex
   private def respond(request: REQUEST, status: Status, t: Throwable): Future[Response] = {
     val response: Response = request.response
     response.status = status
-    response.headerMap.put("Cache-Control", "no-cache")
+    response.cacheControl = "no-cache"
     response.setContentTypeJson()
-    response.setContentString(jsonString(t))
+    response.contentString = jsonString(t)
     Future.value(response)
   }
 }
