@@ -18,8 +18,8 @@ object FinchTemplateApi extends ResponseEncoders {
   private def api = helloApi()
 
   def apiService: Service[Request, Response] =
-    UnhandledExceptionsFilter andThen
-      RequestLoggingFilter andThen
+    RequestLoggingFilter andThen
+      UnhandledExceptionsFilter andThen
       AuthenticationFilter andThen
       api.handle(errorHandler).toService
 }
