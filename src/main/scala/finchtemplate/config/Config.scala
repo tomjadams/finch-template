@@ -5,8 +5,8 @@ import finchtemplate.util.config.ConfigUtils
 import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk.validate.{Credentials, Sha256}
 
-trait MonitoringConfig {
-  val rollbarAccessKey = "4a9a760b7aec46d8952e8b49bb01af36"
+trait MonitoringConfig extends ConfigUtils {
+  val rollbarAccessKey = envVarOrFail("ROLLBAR_ACCESS_KEY")
 }
 
 trait SystemConfig extends ConfigUtils {
@@ -21,6 +21,8 @@ trait SystemConfig extends ConfigUtils {
   def listenAddress = s":${envVar("PORT").getOrElse("8080")}"
 
   val apiAuthenticationCredentials = Credentials(KeyId("API Client"), Key("4ef04c842e178c502e8ae4fa7d14dc6f"), Sha256)
+
+  val miscThreadPoolSize = 100
 }
 
 object Config extends SystemConfig with MonitoringConfig with ConfigUtils

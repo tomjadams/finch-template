@@ -1,24 +1,25 @@
 package finchtemplate
 
-import com.twitter.finagle.Http
 import com.twitter.finagle.param.Stats
+import com.twitter.finagle.{Http, ListeningServer}
 import com.twitter.server.util.{JvmStats, TwitterStats}
 import com.twitter.util.Await
 import finchtemplate.config.Config
 import finchtemplate.config.Environment.env
+import finchtemplate.util.async.AsyncOps
 import finchtemplate.util.error.ErrorReporter._
 import finchtemplate.util.log.Logger._
 
 final class App {
-  lazy val server = Http.server
+  lazy val server: ListeningServer = Http.server
     .withLabel(Config.systemId)
     .configured(Stats(Config.statsReceiver))
     .serve(Config.listenAddress, FinchTemplateApi.apiService)
 
   def boot(): Unit = {
-    log.info(s"Booting in ${env.name} mode on ${server.boundAddress}")
-    registerMetricsAndMonitoring()
+    log.info(s"Booting ${Config.systemId} in ${env.name} mode on ${server.boundAddress}")
     sys.addShutdownHook(shutdown())
+    registerMetricsAndMonitoring()
     Await.ready(server)
   }
 
@@ -30,6 +31,7 @@ final class App {
 
   private def shutdown(): Unit = {
     log.info("Shutting down...")
+    AsyncOps.shutdownExecutorService()
     Await.ready(server.close())
   }
 }
