@@ -43,6 +43,7 @@ Here's some further reading on how this hangs together, and how to do more/exten
   * Keen - https://github.com/keenlabs/KeenClient-Scala/
 * Zipkin
 * How do we differ from https://github.com/BenWhitehead/finch-server ?
+* Can we use https://gist.github.com/vastdevblog/2022320
 
 # Customising
 

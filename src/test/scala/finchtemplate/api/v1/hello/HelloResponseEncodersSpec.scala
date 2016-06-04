@@ -20,7 +20,7 @@ final class HelloResponseEncodersSpec extends Specification with SpecHelper {
 
   val responseProp = new Properties("Hello response encoding") {
     property("encode") = forAll { (h: Hello) =>
-      asJsonString(h) must beEqualTo(s"""{"data":{"hello":{"name":"${h.name}"}}}""")
+      jsonString(h) must beEqualTo(s"""{"data":{"hello":{"name":"${h.name}"}}}""")
     }
   }
 

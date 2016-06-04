@@ -22,7 +22,7 @@ final class ErrorResponseEncodersSpec extends Specification with SpecHelper {
 
   val responseProp = new Properties("Exception response encoding") {
     property("encode") = forAll(genException) { (e: Throwable) =>
-      asJsonString(e) must beEqualTo(s"""{"error":${e.asJson.noSpaces}}""")
+      jsonString(e) must beEqualTo(s"""{"error":${e.asJson.noSpaces}}""")
     }
   }
 
