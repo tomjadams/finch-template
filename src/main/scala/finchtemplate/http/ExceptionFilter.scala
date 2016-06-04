@@ -8,7 +8,7 @@ import finchtemplate.util.error.ErrorReporter._
 import io.finch.EncodeResponse
 
 // Copied from com.twitter.finagle.http.filter.ExceptionFilter
-class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Exception]) extends SimpleFilter[REQUEST, Response] {
+class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Throwable]) extends SimpleFilter[REQUEST, Response] {
   def apply(request: REQUEST, service: Service[REQUEST, Response]): Future[Response] = {
     val finalResponse = {
       try {
@@ -34,6 +34,9 @@ class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Exception]) ex
   }
 
   private def respond(request: REQUEST, status: Status, t: Throwable): Future[Response] = {
+
+    //encoder.apply(t)
+
     val response = request.response
     response.status = status
     response.clearContent()

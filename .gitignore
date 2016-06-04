@@ -1,5 +1,11 @@
+# Misc
+.env
+.history
 *.class
 *.log
+logs/*
+*.DS_Store
+release.properties
 
 # sbt specific
 .cache

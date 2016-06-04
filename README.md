@@ -36,8 +36,6 @@ Here's some further reading on how this hangs together, and how to do more/exten
 * Authentication
   * Server-Authorization header on responses.
 * Client calls to: https://developer.github.com/v3/
-* Rollbar
-  * https://github.com/rollbar/rollbar-java/tree/master/rollbar
 * Syslog logging
 * Metrics
   * Bridging Finagle metrics to Dropwizard Metrics - https://github.com/rlazoti/finagle-metrics & http://rodrigolazoti.com.br/2015/01/08/send-finagle-stats-to-codahale-metrics-library
@@ -76,6 +74,14 @@ There is simple [API documentation](API.md).
     ```
 
     Note. You could also `brew install sbt` if you'd prefer a system version.
+
+1. `etc/dot-env` contains a template `.env` file that you can use to configure your environment variables locally:
+
+      $ cp etc/dot-env .env
+
+See [sbt-dotenv](https://github.com/mefellows/sbt-dotenv) for more information. *Do not check `.env` into source control!*.
+
+Note that if you change this while an sbt session is running, you will need to `reload` sbt for the new settings to take effect (as it's an sbt plugin).
 
 ## Deployment Setup
 
