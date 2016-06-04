@@ -44,6 +44,7 @@ Here's some further reading on how this hangs together, and how to do more/exten
   * Dropwizard metrics in scala - https://github.com/erikvanoosten/metrics-scala
   * Keen - https://github.com/keenlabs/KeenClient-Scala/
 * Zipkin
+* How do we differ from https://github.com/BenWhitehead/finch-server ?
 
 # Customising
 
