@@ -34,13 +34,12 @@ class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Throwable]) ex
   }
 
   private def respond(request: REQUEST, status: Status, t: Throwable): Future[Response] = {
-
-    //encoder.apply(t)
-
-    val response = request.response
+    val response: Response = request.response
     response.status = status
-    response.clearContent()
-    response.contentLength = 0
-    Future.value(response)
+    val body = encoder.apply(t)
+    response.contentLength = body.length
+    val writer = response.writer
+    val writeFuture = writer.write(body)
+    writeFuture.map(_ => response)
   }
 }
