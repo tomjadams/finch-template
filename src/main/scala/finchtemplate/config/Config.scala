@@ -16,9 +16,9 @@ trait SystemConfig extends ConfigUtils {
 
   val coreLoggerName = systemId
 
-  def environment = envVar("ENV").getOrElse("development")
+  def environment = envVarOrFail("ENV")
 
-  def listenAddress = s":${envVar("PORT").getOrElse("8080")}"
+  def listenAddress = s":${envVarOrFail("PORT")}"
 
   val apiAuthenticationCredentials = Credentials(KeyId("API Client"), Key("4ef04c842e178c502e8ae4fa7d14dc6f"), Sha256)
 
