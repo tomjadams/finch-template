@@ -22,22 +22,9 @@ class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Throwable]) ex
       }
     }
     finalResponse.rescue {
-      case e: AuthenticationFailedError =>
-        respond(request, Unauthorized, e)
-      case e: CancelledRequestException =>
-        log.info(s"Client cancelled request to URI ${request.uri} with message ${e}")
-        respond(request, ClientClosedRequest, e)
-      case t: Throwable =>
-        try {
-          log.info(s"Unhandled exception on URI ${request.uri} with message ${t}")
-          errorReporter.error(t)
-          respond(request, InternalServerError, t)
-        } catch {
-          case e: Throwable => {
-            Console.err.println("Unable to log unhandled exception")
-            throw e
-          }
-        }
+      case e: AuthenticationFailedError => respond(request, Unauthorized, e)
+      case e: CancelledRequestException => respond(request, ClientClosedRequest, e)
+      case t: Throwable => reportUnhandledException(request, t)
     }
   }
 
@@ -45,8 +32,21 @@ class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Throwable]) ex
     ???
   }
 
+  private def reportUnhandledException(request: REQUEST, t: Throwable): Future[Response] = {
+    try {
+      log.info(s"Unhandled exception on URI ${request.uri} with message $t")
+      errorReporter.error(t)
+      respond(request, InternalServerError, t)
+    } catch {
+      case e: Throwable => {
+        Console.err.println("Unable to log unhandled exception")
+        throw e
+      }
+    }
+  }
+
   private def respond(request: REQUEST, status: Status, t: Throwable): Future[Response] = {
-    val response: Response = request.response
+    val response = request.response
     response.status = status
     response.cacheControl = "no-cache"
     response.setContentTypeJson()

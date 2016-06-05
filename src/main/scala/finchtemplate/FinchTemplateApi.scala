@@ -6,9 +6,8 @@ import finchtemplate.api.v1.ErrorHandler.errorHandler
 import finchtemplate.api.v1.ResponseEncoders
 import finchtemplate.api.v1.hello.HelloApi._
 import finchtemplate.config.Config.apiAuthenticationCredentials
-import finchtemplate.http.{ExceptionFilter, HawkAuthenticateRequestFilter}
+import finchtemplate.http.{ExceptionFilter, HawkAuthenticateRequestFilter, RequestLoggingFilter}
 import finchtemplate.util.error.ErrorResponseEncoders
-import finchtemplate.util.log.filter.RequestLoggingFilter
 
 object AuthenticationFilter extends HawkAuthenticateRequestFilter(apiAuthenticationCredentials)
 
