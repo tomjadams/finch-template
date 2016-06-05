@@ -16,6 +16,6 @@ class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Throwable]) ex
         case NonFatal(e) => Future.exception(e)
       }
     }
-    finalResponse.rescue(ErrorHandler.filterErrorHandler(request, encoder))
+    finalResponse.rescue(ErrorHandler.topLevelErrorHandler(request, encoder))
   }
 }
