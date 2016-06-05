@@ -1,14 +1,9 @@
 package finchtemplate.http
 
-import com.twitter.finagle.http.Status._
-import com.twitter.finagle.http.{Request, Response, Status}
-import com.twitter.finagle.{CancelledRequestException, Service, SimpleFilter}
+import com.twitter.finagle.http.{Request, Response}
+import com.twitter.finagle.{Service, SimpleFilter}
 import com.twitter.util.{Future, NonFatal}
-import finchtemplate.util.error.AuthenticationFailedError
-import finchtemplate.util.error.ErrorReporter._
-import finchtemplate.util.error.ErrorResponseEncoders.exceptionResponseEncoder
-import finchtemplate.util.json.JsonCodecOps._
-import finchtemplate.util.log.Logger.log
+import finchtemplate.api.v1.ErrorHandler
 import io.finch.EncodeResponse
 
 // Copied from com.twitter.finagle.http.filter.ExceptionFilter
@@ -21,36 +16,6 @@ class ExceptionFilter[REQUEST <: Request](encoder: EncodeResponse[Throwable]) ex
         case NonFatal(e) => Future.exception(e)
       }
     }
-    finalResponse.rescue {
-      case e: AuthenticationFailedError => respond(request, Unauthorized, e)
-      case e: CancelledRequestException => respond(request, ClientClosedRequest, e)
-      case t: Throwable => reportUnhandledException(request, t)
-    }
-  }
-
-  private def rescueException[A](t: Exception): PartialFunction[Throwable, Future[A]] = {
-    ???
-  }
-
-  private def reportUnhandledException(request: REQUEST, t: Throwable): Future[Response] = {
-    try {
-      log.info(s"Unhandled exception on URI ${request.uri} with message $t")
-      errorReporter.error(t)
-      respond(request, InternalServerError, t)
-    } catch {
-      case e: Throwable => {
-        Console.err.println("Unable to log unhandled exception")
-        throw e
-      }
-    }
-  }
-
-  private def respond(request: REQUEST, status: Status, t: Throwable): Future[Response] = {
-    val response = request.response
-    response.status = status
-    response.cacheControl = "no-cache"
-    response.setContentTypeJson()
-    response.contentString = jsonString(t)
-    Future.value(response)
+    finalResponse.rescue(ErrorHandler.filterErrorHandler(request, encoder))
   }
 }

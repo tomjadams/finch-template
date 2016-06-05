@@ -6,6 +6,8 @@ This is a good start: https://github.com/databricks/scala-style-guide
 
 ## Specifics
 
+* Prefer immutability.
+* Prefer explicitness over implicitness. It makes code easier to reason about, removes magic & increases compile times.
 * Even though `Future` has its own "eitherness", use `Future.exception` only for exceptional things (i.e. where you'd
   throw an exception). Use an `Option` for things that may or may not be there, and `Either` or `Xor` for things that
   may fail, but where that failure is something you want to handle yourself (rather than letting bubble up), even if

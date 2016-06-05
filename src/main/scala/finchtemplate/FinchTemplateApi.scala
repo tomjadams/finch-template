@@ -2,7 +2,7 @@ package finchtemplate
 
 import com.twitter.finagle.Service
 import com.twitter.finagle.http.{Request, Response}
-import finchtemplate.api.v1.ErrorHandler.errorHandler
+import finchtemplate.api.v1.ErrorHandler.apiErrorHandler
 import finchtemplate.api.v1.ResponseEncoders
 import finchtemplate.api.v1.hello.HelloApi._
 import finchtemplate.config.Config.apiAuthenticationCredentials
@@ -20,5 +20,5 @@ object FinchTemplateApi extends ResponseEncoders {
     RequestLoggingFilter andThen
       UnhandledExceptionsFilter andThen
       AuthenticationFilter andThen
-      api.handle(errorHandler).toService
+      api.handle(apiErrorHandler).toService
 }
