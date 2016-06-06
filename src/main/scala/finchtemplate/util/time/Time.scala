@@ -6,16 +6,18 @@ import finchtemplate.util.time.TaggedTypesFunctions.{Millis, Seconds}
 import finchtemplate.util.time.Time.iso8601Formatter
 import org.joda.time.DateTimeZone._
 import org.joda.time.format.ISODateTimeFormat
-import org.joda.time.{DateTime, Duration}
+import org.joda.time.{DateTime, DateTimeConstants, Duration}
 
 object Time {
   private val iso8601Formatter = ISODateTimeFormat.dateTime()
   private[finchtemplate] val iso8601Parser = ISODateTimeFormat.dateTimeParser.withOffsetParsed()
-  val millisInSecond: Long = 1000L
+  val millisInSecond: Long = DateTimeConstants.MILLIS_PER_SECOND.toLong
 
   def time(dateTime: DateTime): Time = Time(Millis(dateTime.getMillis))
 
   def time(seconds: Seconds): Time = Time(Millis(seconds * millisInSecond))
+
+  def time(millis: Millis): Time = Time(millis)
 
   def utcTime(millis: Millis): Time = time(new DateTime(millis, UTC))
 
@@ -23,9 +25,9 @@ object Time {
 
   def parseIsoAsTime(iso8601: String): Option[Time] = Try(DateTime.parse(iso8601, iso8601Parser)).map(time(_)).toOption
 
-  def parseMillisAsTimeUtc(millis: String): Option[Time] = millis.parseLongOption.map((m: Long) => Time(Millis(m)))
+  def parseMillisAsTimeUtc(millis: String): Option[Time] = millis.parseLongOption.map((m: Long) => time(Millis(m)))
 
-  def parseSecondsAsTimeUtc(seconds: String): Option[Time] = seconds.parseLongOption.map(s => Time(secondsToMillis(Seconds(s))))
+  def parseSecondsAsTimeUtc(seconds: String): Option[Time] = seconds.parseLongOption.map(s => time(Seconds(s)))
 
   def secondsToMillis(seconds: Seconds): Millis = Millis(seconds * millisInSecond)
 
@@ -33,7 +35,7 @@ object Time {
 }
 
 final case class Time(millis: Millis) {
-  def delta(time: Time): Duration = Duration.millis(this.millis - time.millis)
+  def minus(time: Time): Duration = Duration.millis(this.millis - time.millis)
 
   def asDateTime: DateTime = new DateTime(millis)
 

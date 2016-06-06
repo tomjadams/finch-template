@@ -6,6 +6,7 @@ import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk.params._
 import finchtemplate.util.hawk.validate.TimeValidation.{acceptableTimeDelta, validate}
 import finchtemplate.util.time.TaggedTypesFunctions.{Millis, Seconds}
+import finchtemplate.util.time.Time.{nowUtc, time}
 import finchtemplate.util.time._
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Properties
@@ -27,11 +28,10 @@ final class TimeValidationSpec extends Specification with SpecHelper {
 
   s2"Validating timestamps$timestamps"
 
-  private def timeDeltaWithNow(ts: Seconds): Seconds =
-    Seconds(math.abs(TimeOps.nowUtcSeconds - TimeOps.millisToSeconds(Millis(TimeOps.utcTime(ts).getMillis))))
+  private def timeDeltaWithNow(ts: Seconds): Seconds = Seconds(math.abs(nowUtc.asSeconds - Time.time(ts).asSeconds))
 
   private def context(ts: Seconds): RequestContext = {
-    val header = RequestAuthorisationHeader(KeyId("fred"), ts, Nonce("nonce"), None, Some(ExtendedData("data")), MAC(Base64Encoded("base64")))
+    val header = RequestAuthorisationHeader(KeyId("fred"), time(ts), Nonce("nonce"), None, Some(ExtendedData("data")), MAC(Base64Encoded("base64")))
     RequestContext(Get, Host("example.com"), Port(80), UriPath("/"), header, None)
   }
 }

@@ -4,7 +4,6 @@ import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.parse.HeaderKeyValueParser.parseKeyValue
 import finchtemplate.util.hawk.validate.{MAC, RequestAuthorisationHeader}
-import finchtemplate.util.time.TaggedTypesFunctions.Seconds
 import finchtemplate.util.time.Time.parseSecondsAsTimeUtc
 
 object RequestAuthorisationHeaderParser {

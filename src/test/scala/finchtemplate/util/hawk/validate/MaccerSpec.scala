@@ -8,6 +8,8 @@ import finchtemplate.util.hawk.params._
 import finchtemplate.util.hawk.validate.NormalisedRequest.{normalisedHeaderMac, normalisedPayloadMac}
 import finchtemplate.util.hawk.{HeaderValidationMethod, PayloadValidationMethod}
 import finchtemplate.util.time.TaggedTypesFunctions.Seconds
+import finchtemplate.util.time.Time
+import finchtemplate.util.time.Time.time
 import org.specs2.mutable.Specification
 
 final class MaccerSpec extends Specification with SpecHelper {
@@ -17,20 +19,20 @@ final class MaccerSpec extends Specification with SpecHelper {
   val host = Host("example.com")
   val port = Port(8000)
   val path = UriPath("/resource/1?b=1&a=2")
-  val seconds = Seconds(1465190788)
+  val timestamp = time(Seconds(1465190788))
 
   val nonce = Nonce("j4h3g2")
   val extendedData = ExtendedData("some-app-ext-data")
 
   "Header validation" >> {
     val method = Get
-    val authHeader = new RequestAuthorisationHeader(keyId, seconds, nonce, Some(PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")),
+    val authHeader = new RequestAuthorisationHeader(keyId, timestamp, nonce, Some(PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")),
       Some(extendedData), MAC(Base64Encoded("6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=")))
     val noPayloadRequestContext = RequestContext(method, host, port, path, authHeader, None)
     val normalisedRequest =
       s"""
          |${HeaderValidationMethod.identifier}
-         |$seconds
+         |$timestamp
          |$nonce
          |${method.httpRequestLineMethod}
          |${path.path}
@@ -63,7 +65,7 @@ final class MaccerSpec extends Specification with SpecHelper {
     val payload = PayloadContext(ContentType("text/plain"), "Thank you for flying Hawk".getBytes(UTF_8))
 
     "can be hashed" >> {
-      val authHeader = new RequestAuthorisationHeader(keyId, seconds, nonce, Some(PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")),
+      val authHeader = new RequestAuthorisationHeader(keyId, timestamp, nonce, Some(PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")),
         Some(extendedData), MAC(Base64Encoded("aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw=")))
       val requestContext = RequestContext(Post, host, port, path, authHeader, Some(payload))
       val credentials = Credentials(keyId, key, Sha256)
@@ -72,7 +74,7 @@ final class MaccerSpec extends Specification with SpecHelper {
     }
 
     "failure is short circuited if an invalid hash is provided by the client" >> {
-      val authHeader = new RequestAuthorisationHeader(keyId, seconds, nonce, Some(PayloadHash("INVALID HASH")),
+      val authHeader = new RequestAuthorisationHeader(keyId, timestamp, nonce, Some(PayloadHash("INVALID HASH")),
         Some(extendedData), MAC(Base64Encoded("6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=")))
       val requestContext = RequestContext(Post, host, port, path, authHeader, Some(payload))
       val credentials = Credentials(keyId, key, Sha256)
