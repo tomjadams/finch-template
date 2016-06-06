@@ -17,7 +17,7 @@ object NormalisedRequest {
          |${context.host.host}
          |${context.port.port}
          |${normalisedPayloadMac.map(h => h.encoded).getOrElse("")}
-         |${context.clientAuthHeader.extendedData}
+         |${context.clientAuthHeader.extendedData.getOrElse("")}
       """.stripMargin.trim + "\n"
     MacOps.mac(credentials, normalised.getBytes(UTF_8))
   }

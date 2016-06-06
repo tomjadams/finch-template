@@ -1,10 +1,10 @@
 package finchtemplate.util.hawk.parse
 
 import finchtemplate.util.hawk.TaggedTypesFunctions._
-import finchtemplate.util.hawk.parse.HeaderKeyValueParser.parseKeyValue
 import finchtemplate.util.hawk._
-import finchtemplate.util.hawk.validate.{RequestAuthorisationHeader, MAC}
-import finchtemplate.util.time.TaggedTypesFunctions.Millis
+import finchtemplate.util.hawk.parse.HeaderKeyValueParser.parseKeyValue
+import finchtemplate.util.hawk.validate.{MAC, RequestAuthorisationHeader}
+import finchtemplate.util.time.TaggedTypesFunctions.{Millis, Seconds}
 import finchtemplate.util.time.TimeOps._
 
 object RequestAuthorisationHeaderParser {
@@ -19,13 +19,13 @@ object RequestAuthorisationHeaderParser {
     val kvs = parseKeyValues(header)
     for {
       id <- kvs.get(HeaderKey("id"))
-      timestamp <- kvs.get(HeaderKey("ts")).flatMap(parseMillisAsTime).map(_.getMillis)
+      timestamp <- kvs.get(HeaderKey("ts")).flatMap(parseSecondsAsTime).map(dt => millisToSeconds(Millis(dt.getMillis)))
       nonce <- kvs.get(HeaderKey("nonce"))
-      extendedData <- kvs.get(HeaderKey("ext"))
       mac <- kvs.get(HeaderKey("mac"))
     } yield {
       val payloadHash = kvs.get(HeaderKey("hash")).map(PayloadHash)
-      new RequestAuthorisationHeader(KeyId(id), Millis(timestamp), Nonce(nonce), payloadHash, ExtendedData(extendedData), MAC(Base64Encoded(mac)))
+      val extendedData = kvs.get(HeaderKey("ext")).map(ExtendedData)
+      new RequestAuthorisationHeader(KeyId(id), Seconds(timestamp), Nonce(nonce), payloadHash, extendedData, MAC(Base64Encoded(mac)))
     }
   }
 

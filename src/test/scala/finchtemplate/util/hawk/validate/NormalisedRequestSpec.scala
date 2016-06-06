@@ -7,8 +7,7 @@ import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk.params._
 import finchtemplate.util.hawk.validate.NormalisedRequest._
 import finchtemplate.util.hawk.{HeaderValidationMethod, PayloadValidationMethod}
-import finchtemplate.util.time.TaggedTypesFunctions.Millis
-import org.specs2.ScalaCheck
+import finchtemplate.util.time.TaggedTypesFunctions._
 import org.specs2.mutable.Specification
 
 final class NormalisedRequestSpec extends Specification with SpecHelper {
@@ -18,13 +17,13 @@ final class NormalisedRequestSpec extends Specification with SpecHelper {
   val host = Host("example.com")
   val port = Port(8000)
   val path = UriPath("/resource/1?b=1&a=2")
-  val millis = Millis(1353832234L)
+  val seconds = Seconds(1465190788)
 
   val nonce = Nonce("j4h3g2")
   val extendedData = ExtendedData("some-app-ext-data")
   val payloadHash = PayloadHash("Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=")
-  val authHeader = new RequestAuthorisationHeader(keyId, millis, nonce, Some(payloadHash),
-    extendedData, MAC(Base64Encoded("6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=")))
+  val authHeader = new RequestAuthorisationHeader(keyId, seconds, nonce, Some(payloadHash),
+    Some(extendedData), MAC(Base64Encoded("6R4rV5iE+NPoym+WwjeHzjAGXUtLNIxmo1vpMofpLAE=")))
 
   "Normalised headers without payload" >> {
     val method = Get
@@ -32,7 +31,7 @@ final class NormalisedRequestSpec extends Specification with SpecHelper {
     val normalisedRequest =
       s"""
          |${HeaderValidationMethod.identifier}
-         |$millis
+         |$seconds
          |$nonce
          |${method.httpRequestLineMethod}
          |${path.path}
@@ -62,7 +61,7 @@ final class NormalisedRequestSpec extends Specification with SpecHelper {
     val normalisedRequest =
       s"""
          |${HeaderValidationMethod.identifier}
-         |$millis
+         |$seconds
          |$nonce
          |${method.httpRequestLineMethod}
          |${path.path}

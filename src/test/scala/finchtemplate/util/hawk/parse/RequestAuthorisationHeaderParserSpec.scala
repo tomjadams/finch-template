@@ -20,7 +20,6 @@ final class RequestAuthorisationHeaderParserSpec extends Specification with Spec
     """Hawk ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawk id="dh37fgj492je, nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawk id="dh37fgj492je", ts="1353832234", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
-    """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
     """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", ext="some-app-ext-data""""
   )
   val malformedFields = List(
@@ -49,7 +48,9 @@ final class RequestAuthorisationHeaderParserSpec extends Specification with Spec
   import Arbitraries._
 
   val knownGoodHeaders = List(
-    """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw=""""
+    """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", ext="some-app-ext-data", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw="""",
+    """Hawk id="API Client", ts="1465180293", nonce="SBUyjx", mac="umWzFSjFkf+blSLH57gchUvm106bgxaaLLAVkU+fMy4=""""",
+    """Hawk id="dh37fgj492je", ts="1353832234", nonce="j4h3g2", hash="Yi9LfIIFRtBEPt74PVmbTF/xVAwPn7ub15ePICfgnuY=", mac="aSe1DERmZuRl3pI36/9BdZmnErTw3sNzOOAUlfeKjVw=""""
   )
   val genKnownValidHeaders: Gen[RawAuthenticationHeader] = Gen.oneOf(knownGoodHeaders).map(UTTF.RawAuthenticationHeader)
 
@@ -60,7 +61,7 @@ final class RequestAuthorisationHeaderParserSpec extends Specification with Spec
     }
 
     property("generated headers") = forAll {
-      (keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: ExtendedData, mac: MAC) =>
+      (keyId: KeyId, timestamp: Seconds, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: Option[ExtendedData], mac: MAC) =>
         val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header(keyId, timestamp, nonce, payloadHash, extendedData, mac))
         parsed must beSome(new RequestAuthorisationHeader(keyId, timestamp, nonce, payloadHash, extendedData, mac))
     }
@@ -68,11 +69,10 @@ final class RequestAuthorisationHeaderParserSpec extends Specification with Spec
 
   s2"Parsing authentication header$parseProp"
 
-  private def header(keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: ExtendedData, mac: MAC): RawAuthenticationHeader = {
-    val s = payloadHash match {
-      case Some(hash) => s"""Hawk id="$keyId", ts="$timestamp", nonce="$nonce", hash="$hash", ext="$extendedData", mac="${mac.encoded}""""
-      case None => s"""Hawk id="$keyId", ts="$timestamp", nonce="$nonce", ext="$extendedData", mac="${mac.encoded}""""
-    }
-    UTTF.RawAuthenticationHeader(s)
+  private def header(keyId: KeyId, timestamp: Seconds, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: Option[ExtendedData], mac: MAC): RawAuthenticationHeader = {
+    val kvs = Map("id" -> s"$keyId", "ts" -> s"$timestamp", "nonce" -> s"$nonce", "mac" -> s"${mac.encoded}") ++
+      payloadHash.map(hash => Map("hash" -> s"$hash")).getOrElse(Map()) ++
+      extendedData.map(ext => Map("ext" -> s"$ext")).getOrElse(Map())
+    UTTF.RawAuthenticationHeader(s"""Hawk ${kvs.map(kv => s"""${kv._1}="${kv._2}"""").mkString(", ")}""")
   }
 }

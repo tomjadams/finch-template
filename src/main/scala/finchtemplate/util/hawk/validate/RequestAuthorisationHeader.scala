@@ -1,7 +1,7 @@
 package finchtemplate.util.hawk.validate
 
 import finchtemplate.util.hawk._
-import finchtemplate.util.time.Millis
+import finchtemplate.util.time.Seconds
 
-final case class RequestAuthorisationHeader(keyId: KeyId, timestamp: Millis, nonce: Nonce, payloadHash: Option[PayloadHash],
-  extendedData: ExtendedData, mac: MAC)
+final case class RequestAuthorisationHeader(keyId: KeyId, timestamp: Seconds, nonce: Nonce, payloadHash: Option[PayloadHash],
+  extendedData: Option[ExtendedData], mac: MAC)

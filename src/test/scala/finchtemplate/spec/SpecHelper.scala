@@ -10,7 +10,7 @@ import org.specs2.matcher.XorMatchers
 import org.specs2.specification.BeforeAll
 
 trait SpecHelper extends TestEnvironmentSetter with ScalaCheck with Generators with JsonCodecOps with XorMatchers with BeforeAll {
-  lazy val log = new Logger(s"${Config.coreLoggerName}-test")
+  val log = new Logger(s"${Config.coreLoggerName}-test")
 
   override def beforeAll() = setEnvironment()
 

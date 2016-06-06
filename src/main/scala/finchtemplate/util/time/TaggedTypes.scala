@@ -4,7 +4,9 @@ import shapeless.tag
 import shapeless.tag.@@
 
 trait MillisTag
+trait SecondsTag
 
 object TaggedTypesFunctions {
-  def Millis(l: Long): @@[Long, MillisTag] = tag[MillisTag](l)
+  def Millis(m: Long): @@[Long, MillisTag] = tag[MillisTag](m)
+  def Seconds(s: Int): @@[Int, SecondsTag] = tag[SecondsTag](s)
 }
