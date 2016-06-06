@@ -4,5 +4,5 @@ import shapeless.tag.@@
 
 package object time {
   type Millis = Long @@ MillisTag
-  type Seconds = Int @@ SecondsTag
+  type Seconds = Long @@ SecondsTag
 }

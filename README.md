@@ -8,10 +8,9 @@ It aims to provide:
 
 * A HTTP stack, using [Finch](https://github.com/finagle/finch);
 * Authentication support using [Hawk](https://github.com/hueniverse/hawk), a HMAC-style protocol;
-* JSON encoding & decoding, using [Circe](https://github.com/travisbrown/circe);
-* A standard response format, including reasonable error handling;
+* JSON encoding & decoding, using [Circe](https://github.com/travisbrown/circe), including reasonable error handling;
 * Clients for talking to downstream services using [Featherbed](https://finagle.github.io/featherbed);
-* Centralised logging using syslog;
+* Logging to syslog;
 * [Metrics](https://twitter.github.io/finagle/guide/Metrics.html) support using ...;
 * Monitoring via New Relic;
 * Error reporting to [Rollbar](https://rollbar.com)
@@ -33,14 +32,15 @@ Here's some further reading on how this hangs together, and how to do more/exten
 
 # TODO
 
-* Authentication
-  * Server-Authorization header on responses.
-* Client calls to: https://developer.github.com/v3/
+* Deployment
 * Syslog logging
 * Metrics
   * Bridging Finagle metrics to Dropwizard Metrics - https://github.com/rlazoti/finagle-metrics & http://rodrigolazoti.com.br/2015/01/08/send-finagle-stats-to-codahale-metrics-library
   * Dropwizard metrics in scala - https://github.com/erikvanoosten/metrics-scala
   * Keen - https://github.com/keenlabs/KeenClient-Scala/
+* Authentication
+  * Server-Authorization header on responses.
+* Client calls to: https://developer.github.com/v3/
 * Zipkin
 * How do we differ from https://github.com/BenWhitehead/finch-server ?
 * Can we use https://gist.github.com/vastdevblog/2022320
@@ -53,6 +53,8 @@ Here's some further reading on how this hangs together, and how to do more/exten
 
   1. Put your keys (or a reference to how they're found, e.g. via environment variables) in.
   1. Modify any of the values you wish, such as the port or system name.
+
+1. Go nuts.
 
 # API
 

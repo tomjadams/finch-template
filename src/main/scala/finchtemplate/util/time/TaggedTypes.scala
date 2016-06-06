@@ -8,5 +8,5 @@ trait SecondsTag
 
 object TaggedTypesFunctions {
   def Millis(m: Long): @@[Long, MillisTag] = tag[MillisTag](m)
-  def Seconds(s: Int): @@[Int, SecondsTag] = tag[SecondsTag](s)
+  def Seconds(s: Long): @@[Long, SecondsTag] = tag[SecondsTag](s)
 }

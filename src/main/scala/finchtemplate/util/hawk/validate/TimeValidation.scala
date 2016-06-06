@@ -14,7 +14,7 @@ object TimeValidation extends Validator[TimeValid] {
   val acceptableTimeDelta = Duration.standardMinutes(2)
 
   override def validate(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[HawkError, TimeValid] = {
-    val delta = Seconds(math.abs(TimeOps.nowUtcSeconds - TimeOps.millisToSeconds(Millis(clientTs(context).getMillis))))
+    val delta = Seconds(math.abs(Time.nowUtc - TimeOps.millisToSeconds(Millis(clientTs(context).getMillis))))
 
     //    Logger.log.info(s"TimeOps.nowUtc.getMillis : ${TimeOps.nowUtc.getMillis}")
     //    Logger.log.info(s"clientTs(context).getMillis : ${clientTs(context).getMillis}")
