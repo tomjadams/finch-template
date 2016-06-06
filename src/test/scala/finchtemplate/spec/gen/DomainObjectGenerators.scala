@@ -12,7 +12,7 @@ trait DomainObjectGenerators {
 
   val genMillis: Gen[Millis] = Gen.chooseNum(0L, now.plusYears(100).getMillis, now.getMillis).map(Millis)
   val genSeconds: Gen[Seconds] = Gen.chooseNum(0L, time(now).asSeconds, time(now.plusYears(100)).asSeconds).map(Seconds)
-  val genTime: Gen[Time] = Gen.chooseNum(0L, now.plusYears(100).getMillis, now.getMillis).map(m => time(Millis(m)))
+  val genTime: Gen[Time] = Gen.chooseNum(0L, now.plusYears(100).getMillis, now.getMillis).map(m => Time(Millis(m)))
   val genHello = alphaStr.map { n => Hello(n) }
 
   implicit def arbMillis: Arbitrary[Millis] = Arbitrary(genMillis)
