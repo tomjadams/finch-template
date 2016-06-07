@@ -4,7 +4,6 @@ import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.parse.HeaderKeyValueParser.parseKeyValue
 import finchtemplate.util.hawk.validate.{MAC, RequestAuthorisationHeader}
-import finchtemplate.util.log.Logger
 import finchtemplate.util.time.Time.parseSecondsAsTimeUtc
 
 object RequestAuthorisationHeaderParser {
@@ -17,9 +16,6 @@ object RequestAuthorisationHeaderParser {
 
   private def parseSupportedHeader(header: RawAuthenticationHeader): Option[RequestAuthorisationHeader] = {
     val kvs = parseKeyValues(header)
-
-    Logger.log.info(s": ${kvs.get(HeaderKey("ts"))}")
-    
     for {
       id <- kvs.get(HeaderKey("id"))
       timestamp <- kvs.get(HeaderKey("ts")).flatMap(parseSecondsAsTimeUtc)
