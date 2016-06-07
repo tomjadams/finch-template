@@ -2,7 +2,6 @@ package finchtemplate.util.time
 
 import com.github.benhutchison.mouse.all._
 import com.twitter.util.Try
-import finchtemplate.util.log.Logger
 import finchtemplate.util.time.TaggedTypesFunctions.{Millis, Seconds}
 import finchtemplate.util.time.Time.iso8601Formatter
 import org.joda.time.DateTimeZone._
@@ -16,12 +15,7 @@ object Time {
 
   def time(dateTime: DateTime): Time = Time(Millis(dateTime.getMillis))
 
-  def time(seconds: Seconds): Time = {
-    Logger.log.info(s"seconds : $seconds")
-    val t = Time(Millis(seconds * millisInSecond))
-    Logger.log.info(s"parsed time: $t")
-    t
-  }
+  def time(seconds: Seconds): Time = Time(Millis(seconds * millisInSecond))
 
   def utcTime(millis: Millis): Time = time(new DateTime(millis, UTC))
 

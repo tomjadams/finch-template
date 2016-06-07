@@ -14,10 +14,6 @@ object TimeValidation extends Validator[TimeValid] {
 
   override def validate(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[HawkError, TimeValid] = {
     val delta = nowUtc.minus(context.clientAuthHeader.timestamp).getStandardSeconds
-
-    //    Logger.log.info(s"TimeOps.nowUtc.getMillis : ${TimeOps.nowUtc.getMillis}")
-    //    Logger.log.info(s"clientTs(context).getMillis : ${clientTs(context).getMillis}")
-
     (delta <= acceptableTimeDelta.getStandardSeconds).xor(error("Timestamp invalid"), new TimeValid {})
   }
 }
