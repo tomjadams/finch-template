@@ -4,6 +4,7 @@ import finchtemplate.spec.SpecHelper
 import finchtemplate.util.hawk.TaggedTypesFunctions.{ExtendedData => _, Nonce => _, PayloadHash => _, RawAuthenticationHeader => _}
 import finchtemplate.util.hawk.validate.{MAC, RequestAuthorisationHeader}
 import finchtemplate.util.hawk.{TaggedTypesFunctions => UTTF, _}
+import finchtemplate.util.time.TaggedTypesFunctions.Seconds
 import finchtemplate.util.time._
 import org.scalacheck.Prop._
 import org.scalacheck.{Arbitrary, Gen, Properties}
@@ -61,9 +62,11 @@ final class RequestAuthorisationHeaderParserSpec extends Specification with Spec
     }
 
     property("generated headers") = forAll {
-      (keyId: KeyId, timestamp: Time, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: Option[ExtendedData], mac: MAC) =>
-        val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header(keyId, timestamp, nonce, payloadHash, extendedData, mac))
+      (keyId: KeyId, timestamp: Time, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: Option[ExtendedData], mac: MAC) => {
+        // Note. We re-parse
+        val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header(keyId, Time.time(Seconds(timestamp.asSeconds)), nonce, payloadHash, extendedData, mac))
         parsed must beSome(new RequestAuthorisationHeader(keyId, timestamp, nonce, payloadHash, extendedData, mac))
+      }
     }
   }
 

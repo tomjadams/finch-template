@@ -5,7 +5,7 @@ import finchtemplate.util.hawk.HeaderValidationMethod
 import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk.params._
 import finchtemplate.util.hawk.validate.TimeValidation.{acceptableTimeDelta, validate}
-import finchtemplate.util.time.TaggedTypesFunctions.{Millis, Seconds}
+import finchtemplate.util.time.TaggedTypesFunctions.Seconds
 import finchtemplate.util.time.Time.{nowUtc, time}
 import finchtemplate.util.time._
 import org.scalacheck.Prop.forAll
@@ -16,7 +16,7 @@ final class TimeValidationSpec extends Specification with SpecHelper {
   val credentials = Credentials(KeyId("fred"), Key("d0p1h1n5"), Sha256)
 
   val timestamps = new Properties("Timestamps") {
-    property("are valid if within the interval") = forAll { (ts: Seconds) =>
+    property("are valid if within the interval") = forAll(genSeconds) { (ts: Seconds) =>
       val delta = timeDeltaWithNow(ts)
       if (delta > acceptableTimeDelta.getMillis) {
         validate(credentials, context(ts), HeaderValidationMethod) must beXorLeft
