@@ -60,10 +60,12 @@ final class RequestAuthorisationHeaderParserSpec extends Specification with Spec
       parsed must beSome
     }
 
+    // Note. We re-parse the time here & below so that we loose millisecond precision, i.e. what we would get passed from a client call.
     property("generated headers") = forAll {
       (keyId: KeyId, timestamp: Time, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: Option[ExtendedData], mac: MAC) => {
-        val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header(keyId, timestamp, nonce, payloadHash, extendedData, mac))
-        parsed must beSome(new RequestAuthorisationHeader(keyId, timestamp, nonce, payloadHash, extendedData, mac))
+        val lossyTime = Time.time(timestamp.asSeconds)
+        val parsed = RequestAuthorisationHeaderParser.parseAuthHeader(header(keyId, lossyTime, nonce, payloadHash, extendedData, mac))
+        parsed must beSome(new RequestAuthorisationHeader(keyId, lossyTime, nonce, payloadHash, extendedData, mac))
       }
     }
   }
@@ -72,7 +74,7 @@ final class RequestAuthorisationHeaderParserSpec extends Specification with Spec
 
   private def header(keyId: KeyId, timestamp: Time, nonce: Nonce, payloadHash: Option[PayloadHash], extendedData: Option[ExtendedData], mac: MAC): RawAuthenticationHeader = {
     // Note. We re-parse the time here so that we loose millisecond precision, i.e. what we would get passed from a client call.
-    val kvs = Map("id" -> s"$keyId", "ts" -> s"${Time.time(timestamp.asSeconds).asSeconds}", "nonce" -> s"$nonce", "mac" -> s"${mac.encoded}") ++
+    val kvs = Map("id" -> s"$keyId", "ts" -> s"${timestamp.asSeconds}", "nonce" -> s"$nonce", "mac" -> s"${mac.encoded}") ++
       payloadHash.map(hash => Map("hash" -> s"$hash")).getOrElse(Map()) ++
       extendedData.map(ext => Map("ext" -> s"$ext")).getOrElse(Map())
     UTTF.RawAuthenticationHeader(s"""Hawk ${kvs.map(kv => s"""${kv._1}="${kv._2}"""").mkString(", ")}""")
