@@ -30,7 +30,7 @@ Here's some further reading on how this hangs together, and how to do more/exten
 * [Cats documentation](http://typelevel.org/cats/)
 * [Herding Cats](http://eed3si9n.com/herding-cats/) - an introduction/tutorial on Cats
 
-# TODO
+# TODO List
 
 * Deployment
 * Syslog logging
@@ -40,10 +40,8 @@ Here's some further reading on how this hangs together, and how to do more/exten
   * Keen - https://github.com/keenlabs/KeenClient-Scala/
 * Authentication
   * Server-Authorization header on responses.
-* Client calls to: https://developer.github.com/v3/
+* Downstream client calls to: https://developer.github.com/v3/
 * Zipkin
-* How do we differ from https://github.com/BenWhitehead/finch-server ?
-* Can we use https://gist.github.com/vastdevblog/2022320
 
 # Customising
 
