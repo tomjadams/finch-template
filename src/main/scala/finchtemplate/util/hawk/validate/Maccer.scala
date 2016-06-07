@@ -7,7 +7,6 @@ import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.params.{PayloadContext, RequestContext}
 import finchtemplate.util.hawk.validate.NormalisedRequest._
-import finchtemplate.util.log.Logger
 
 object Maccer {
   def requestMac(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[HawkError, MAC] =
