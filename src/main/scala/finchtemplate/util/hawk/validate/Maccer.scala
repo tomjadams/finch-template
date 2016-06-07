@@ -21,7 +21,7 @@ object Maccer {
 
   private def validatePayload(credentials: Credentials, context: RequestContext): Xor[HawkError, MAC] = {
     context.payload.map { payload =>
-      context.clientAuthHeader.payloadHash.flatMap { (clientProvidedHash: PayloadHash) =>
+      context.clientAuthHeader.payloadHash.flatMap { clientProvidedHash =>
         val macFromClientProvidedHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientProvidedHash))))
         (macFromClientProvidedHash != context.clientAuthHeader.mac).option(errorXor("MAC provided in request does not match the computed MAC (payload hash may be invalid)"))
       }.getOrElse(right(completePayloadMac(credentials, context, payload)))
