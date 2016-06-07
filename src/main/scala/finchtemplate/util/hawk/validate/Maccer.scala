@@ -7,6 +7,7 @@ import finchtemplate.util.hawk.TaggedTypesFunctions._
 import finchtemplate.util.hawk._
 import finchtemplate.util.hawk.params.{PayloadContext, RequestContext}
 import finchtemplate.util.hawk.validate.NormalisedRequest._
+import finchtemplate.util.log.Logger
 
 object Maccer {
   def requestMac(credentials: Credentials, context: RequestContext, method: ValidationMethod): Xor[HawkError, MAC] =
@@ -20,7 +21,7 @@ object Maccer {
 
   private def validatePayload(credentials: Credentials, context: RequestContext): Xor[HawkError, MAC] = {
     context.payload.map { payload =>
-      context.clientAuthHeader.payloadHash.flatMap { clientProvidedHash =>
+      context.clientAuthHeader.payloadHash.flatMap { (clientProvidedHash: PayloadHash) =>
         val macFromClientProvidedHash = normalisedHeaderMac(credentials, context, Some(MAC(Base64Encoded(clientProvidedHash))))
         (macFromClientProvidedHash != context.clientAuthHeader.mac).option(errorXor("MAC provided in request does not match the computed MAC (payload hash may be invalid)"))
       }.getOrElse(right(completePayloadMac(credentials, context, payload)))

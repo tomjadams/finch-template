@@ -10,7 +10,7 @@ object NormalisedRequest {
     val normalised =
       s"""
          |${HeaderValidationMethod.identifier}
-         |${context.clientAuthHeader.timestamp}
+         |${context.clientAuthHeader.timestamp.asSeconds}
          |${context.clientAuthHeader.nonce}
          |${context.method.httpRequestLineMethod}
          |${context.path.path}

@@ -10,10 +10,10 @@ import org.scalacheck.{Arbitrary, Gen}
 trait DomainObjectGenerators {
   private lazy val now = nowUtc.asDateTime
 
-  val genMillis: Gen[Millis] = Gen.chooseNum(0L, now.plusYears(100).getMillis, now.getMillis).map(Millis)
-  val genSeconds: Gen[Seconds] = Gen.chooseNum(0L, time(now).asSeconds, time(now.plusYears(100)).asSeconds).map(Seconds)
-  val genTime: Gen[Time] = Gen.chooseNum(0L, now.plusYears(100).getMillis, now.getMillis).map(m => Time(Millis(m)))
-  val genHello = alphaStr.map { n => Hello(n) }
+  val genTime: Gen[Time] = Gen.chooseNum(now.getMillis, now.plusYears(100).getMillis).map(ms => Time(Millis(ms)))
+  val genMillis: Gen[Millis] = genTime.map(_.millis)
+  val genSeconds: Gen[Seconds] = genTime.map(_.asSeconds)
+  val genHello = alphaStr.map(n => Hello(n))
 
   implicit def arbMillis: Arbitrary[Millis] = Arbitrary(genMillis)
 

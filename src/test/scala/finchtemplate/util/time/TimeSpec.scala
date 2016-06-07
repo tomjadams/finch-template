@@ -50,4 +50,12 @@ final class TimeSpec extends Specification with SpecHelper {
   }
 
   s2"Time constructors$constructorProps"
+
+  val minusProps = new Properties("Minus") {
+    property("millis") = forAll { (a: Time, b: Time) =>
+      a.minus(b).getMillis must beEqualTo(a.millis - b.millis)
+    }
+  }
+
+  s2"Minus function$minusProps"
 }

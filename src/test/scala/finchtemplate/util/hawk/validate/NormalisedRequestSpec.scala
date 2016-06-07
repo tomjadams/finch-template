@@ -14,7 +14,6 @@ import org.specs2.mutable.Specification
 final class NormalisedRequestSpec extends Specification with SpecHelper {
   val keyId = KeyId("dh37fgj492je")
   val key = Key("werxhqb98rpaxn39848xrunpaw3489ruxnpa98w4rxn")
-
   val host = Host("example.com")
   val port = Port(8000)
   val path = UriPath("/resource/1?b=1&a=2")
@@ -32,7 +31,7 @@ final class NormalisedRequestSpec extends Specification with SpecHelper {
     val normalisedRequest =
       s"""
          |${HeaderValidationMethod.identifier}
-         |$timestamp
+         |${timestamp.asSeconds}
          |$nonce
          |${method.httpRequestLineMethod}
          |${path.path}
@@ -62,7 +61,7 @@ final class NormalisedRequestSpec extends Specification with SpecHelper {
     val normalisedRequest =
       s"""
          |${HeaderValidationMethod.identifier}
-         |$timestamp
+         |${timestamp.asSeconds}
          |$nonce
          |${method.httpRequestLineMethod}
          |${path.path}
